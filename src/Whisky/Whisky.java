@@ -1,3 +1,5 @@
+package Whisky;
+
 import java.util.ArrayList;
 
 public class Whisky {
@@ -26,5 +28,33 @@ public class Whisky {
         this.aroma = aroma;
         this.finish = finish;
         this.taste = taste;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public String getWhiskyType() {
+        return whiskyType;
+    }
+
+    public int getAbv() {
+        return abv;
+    }
+
+    public ArrayList<String> getAroma() {
+        return aroma;
+    }
+
+    public ArrayList<String> getTaste() {
+        return taste;
+    }
+
+    public ArrayList<String> getFinish() {
+        return finish;
     }
 }

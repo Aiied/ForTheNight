@@ -1,3 +1,5 @@
+package TastingNote;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -5,13 +7,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class WhiskyList {
-    private final ArrayList<Whisky> whiskies = new ArrayList<>();
+public class TastingNoteList {
+    private final ArrayList<TastingNote> tastingNotes = new ArrayList<>();
 
-    public WhiskyList() {
+    public TastingNoteList() {
     }
 
-    public WhiskyList(String filePath) {
+    public TastingNoteList(String filePath) {
         loadFromFile(filePath);
     }
 
@@ -24,32 +26,31 @@ public class WhiskyList {
                     continue;
                 }
 
-                whiskies.add(parseWhisky(line));
+                tastingNotes.add(parseTastingNote(line));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void add(Whisky whisky) {
-        whiskies.add(whisky);
+    public void add(TastingNote tastingNote) {
+        tastingNotes.add(tastingNote);
     }
 
-    public List<Whisky> getWhiskies() {
-        return Collections.unmodifiableList(whiskies);
+    public List<TastingNote> getTastingNotes() {
+        return Collections.unmodifiableList(tastingNotes);
     }
 
-    private Whisky parseWhisky(String line) {
+    private TastingNote parseTastingNote(String line) {
         String[] values = line.split("\\|");
 
-        return new Whisky(
+        return new TastingNote(
                 values[0],
                 values[1],
-                values[2],
-                Integer.parseInt(values[3]),
+                parseNotes(values[2]),
+                parseNotes(values[3]),
                 parseNotes(values[4]),
-                parseNotes(values[5]),
-                parseNotes(values[6])
+                Integer.parseInt(values[5])
         );
     }
 
