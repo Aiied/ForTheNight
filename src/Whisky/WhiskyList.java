@@ -1,67 +1,53 @@
 package Whisky;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import Ui.BaseList;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-public class WhiskyList {
-    private final ArrayList<Whisky> whiskies = new ArrayList<>();
+public class WhiskyList extends BaseList<Whisky> {
 
     public WhiskyList() {
+        super();
     }
 
     public WhiskyList(String filePath) {
-        loadFromFile(filePath);
-    }
-
-    public void loadFromFile(String filePath) {
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-
-            while ((line = br.readLine()) != null) {
-                if (line.isBlank()) {
-                    continue;
-                }
-
-                whiskies.add(parseWhisky(line));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void add(Whisky whisky) {
-        whiskies.add(whisky);
+        super(filePath);
     }
 
     public List<Whisky> getWhiskies() {
-        return Collections.unmodifiableList(whiskies);
+        return getItems();
     }
 
-    private Whisky parseWhisky(String line) {
-        String[] values = line.split("\\|");
+    @Override
+    protected Whisky parseLine(String line) {
+        String[] values = line.split("\\|", -1);
+
+        if (values.length < 9) {
+            System.out.println("Invalid whisky data: " + line);
+            return null;
+        }
 
         return new Whisky(
                 values[0],
                 values[1],
                 values[2],
-                Integer.parseInt(values[3]),
-                parseNotes(values[4]),
-                parseNotes(values[5]),
-                parseNotes(values[6])
+                values[3],
+                values[4],
+                values.length > 9 ? values[9] : "",
+                parseAbv(values[5]),
+                parseNotes(values[6]),
+                parseNotes(values[7]),
+                parseNotes(values[8])
         );
     }
 
-    private ArrayList<String> parseNotes(String text) {
-        ArrayList<String> notes = new ArrayList<>();
-
-        for (String note : text.split(",")) {
-            notes.add(note.trim());
+    private float parseAbv(String text) {
+        if (text == null || text.isBlank()) {
+            return 0.0f;
         }
 
-        return notes;
+        return Float.parseFloat(text);
     }
+
 }

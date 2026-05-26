@@ -1,46 +1,59 @@
-import Button.PairingButton;
-import Button.SearchButton;
-import Button.TastingNoteButton;
 import Pairing.PairingPage;
+import Search.SearchPage;
 import TastingNote.TastingNotePage;
+import Ui.BackgroundPanel;
+import Ui.Button.PairingButton;
+import Ui.Button.SearchButton;
+import Ui.Button.TastingNoteButton;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 public class MainPage extends JFrame {
     public MainPage() {
         setTitle("Main");
-        setSize(400, 300);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(3, 1, 20, 20));
-        panel.setBackground(java.awt.Color.BLACK);
+        JPanel panel = new BackgroundPanel(new BorderLayout());
+        JPanel menuPanel = new JPanel();
+        menuPanel.setOpaque(false);
+        menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.Y_AXIS));
 
         JButton diaryButton = new TastingNoteButton();
         JButton searchButton = new SearchButton();
         JButton pairingButton = new PairingButton();
+        diaryButton.setAlignmentX(CENTER_ALIGNMENT);
+        searchButton.setAlignmentX(CENTER_ALIGNMENT);
+        pairingButton.setAlignmentX(CENTER_ALIGNMENT);
 
         diaryButton.addActionListener(e -> {
-            new TastingNotePage();
-            dispose();
+            new TastingNotePage(this);
+            setVisible(false);
         });
 
         searchButton.addActionListener(e -> {
-            new SearchPage();
-            dispose();
+            new SearchPage(this);
+            setVisible(false);
         });
 
         pairingButton.addActionListener(e -> {
-            new PairingPage();
-            dispose();
+            new PairingPage(this);
+            setVisible(false);
         });
 
+        menuPanel.add(Box.createVerticalGlue());
+        menuPanel.add(diaryButton);
+        menuPanel.add(Box.createRigidArea(new Dimension(0, 28)));
+        menuPanel.add(searchButton);
+        menuPanel.add(Box.createRigidArea(new Dimension(0, 28)));
+        menuPanel.add(pairingButton);
+        menuPanel.add(Box.createVerticalGlue());
+
         panel.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
-        panel.add(diaryButton);
-        panel.add(searchButton);
-        panel.add(pairingButton);
+        panel.add(menuPanel, BorderLayout.CENTER);
 
         add(panel);
         setVisible(true);

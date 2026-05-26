@@ -1,0 +1,30 @@
+﻿Lagavulin 8 Years Old|Scotland|Single Malt|Lagavulin Distillery|Bourbon, Sherry|48|Sea Breeze, Smoky|Peat||
+Singleton Dufftown 12 Years Old|Scotland|Single Malt|Dufftown Distillery|Bourbon, Sherry|40|Honey, Apple|Coffee|Nuts|
+Jameson Standard|Ireland|Blended|||40|Floral, Vanilla|Nuts, Sherry|Subtle|
+Black Bottle|Scotland|Blended|||40|Spice, Smoky|Smoky, Honey|Nutmeg|src/assets/image/Whisky/BlackBottle.png
+Johnnie Walker Black|Scotland|Blended|||40|Citrus|Vanilla, Dried Fruit|Smoky|
+Balvenie DoubleWood 12 Years Old|Scotland|Single Malt|Balvenie Distillery|Bourbon, Sherry|40|Vanilla|Honey|Complex|
+Monkey Shoulder|Scotland|Blended Malt||||Vanilla, Chocolate|Honey,Clove|Woody|
+Buffalo Trace|USA|Bourbon|Buffalo Trace Distillery|American White Oak|45|Vanilla|Woody, Spice|Vanilla|
+Glenmorangie Original 10 Years Old|Scotland|Single Malt|Glenmorangie Distillery|American White Oak|40|Orange, Vanilla|Floral, Vanilla|Orange|
+The Glenlivet 12 Years Old|Scotland|Single Malt|The Glenlivet Distillery|Bourbon, Sherry|40|Pineapple, Honey, Floral|Apple, Citrus|Complex|
+Hibiki Harmony|Japan|Blended|Yamazaki Distillery||43|Floral|Chocolate, Honey|Subtle|src/assets/image/Whisky/HibikiHarmony.png
+Chivas Regal 12 Years Old|Scotland|Blended|||40|Floral, Caramel|Honey, Vanilla|Subtle|
+Ardbeg 10 Years Old|Scotland|Single Malt|Ardbeg Distillery|American White Oak|46|Smoky, Chocolate|Peat, Nuts|Complex|
+Suntory Kakubin|Japan|Blended|||40|Vanilla, Honey|Citrus, Spice|Honey, Nuts|
+Jim Beam White|USA|Bourbon|Jim Beam Distillery|American White Oak|40|Orange, Leather|Vanilla|Woody|
+Jack Daniel's old No.7|USA|Tennessee|Jack Daniel's Distillery|American White Oak|40|Vanilla|Caramel, Spice|Complex|
+Wild Turkey 101|USA|Bourbon|Wild Turkey Distillery|American White Oak|50.5|Leather, Vanilla|Spice|Smooth|
+Wild Turkey Rare Breed|USA|Bourbon|Wild Turkey Distillery|American White Oak|58.4|Spice, Floral|Smoky, Spice|Smooth|
+Johnnie Walker Green|Scotland|Blended Malt|||43|Smoky, Woody, Pepper|Vanilla|Smoky|
+Glenglassaugh Sandend|Scotland|Single Malt|Glenglassaugh Distillery||50.5|Chocolate, Pineapple|Caramel, Pineapple|Butter, Sea Breeze|
+Talisker 10 Years Old|Scotland|Single Malt|||45.8|Peat, Sea Breeze|Smoky, Spice|Complex|
+Glenfiddich 18 Years Old|Scotland|Single Malt|Glenfiddich Distillery|Sherry, Bourbon|40|Apple|Dried Fruit|Honey, Cinnamon|
+Johnnie Walker Blonde|Scotland|Blended|||40|Vanilla, Caramel|Vanilla|Spice|
+Laphroaig 10 Years Old|Scotland|Single Malt|Laphroaig Distillery|Bourbon|43|Peat, Sea Breeze|Citrus, Vanilla|Spice|
+The Glen Grant 15 Years Old Batch Strength|Scotland|Single Malt|The Glen Grant Distillery|Bourbon|50|Floral, Apple|Honey,Vanilla|Honey,Apple|
+The Glen Grant Arboralis|Scotland|Single Malt|The Glen Grant Distillery|Bourbon, Sherry|40|Raisin, Lemon, Floral|Dried Fruit, Vanilla|Complex|
+Nikka Taketsuru Pure Malt|Japan|Blended Malt|||43|Apple, Vanilla|Orange, Peat|Chocolate, Smoky|
+Elements of Islay I Love Camping|Scotland|Independent Bottling|||59.3|Sea Breeze, Lemon|Dried Fruit, Apple|Peat, Spice|
+Elements of Islay I Love Oyster|Scotland|Independent Bottling|||59.3|Sea Breeze, Lemon|Apple, Chocolate|Peat|
+Kaiyo Japanese Mizunara Cask Strength|Japan|Independent Bottling|||53|Mizunara, Orange|Honey, Coffee|Spice, Caramel|

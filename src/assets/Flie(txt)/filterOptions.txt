@@ -1,0 +1,6 @@
+# Search filter option source
+country=Ireland,Japan,Scotland,USA
+type=Blended,Blended Malt,Bourbon,Independent Bottling,Single Malt,Tennessee
+aroma=Apple,Caramel,Chocolate,Citrus,Floral,Honey,Leather,Lemon,Mizunara,Orange,Peat,Pepper,Pineapple,Raisin,Sea Breeze,Smoky,Spice,Vanilla,Woody
+taste=Apple,Caramel,Chocolate,Citrus,Clove,Coffee,Dried Fruit,Floral,Honey,Nuts,Orange,Peat,Pineapple,Sherry,Smoky,Spice,Vanilla,Woody
+finish=Apple,Butter,Caramel,Chocolate,Cinnamon,Complex,Honey,Nutmeg,Nuts,Orange,Peat,Sea Breeze,Smoky,Smooth,Spice,Subtle,Vanilla,Woody

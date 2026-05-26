@@ -6,7 +6,10 @@ public class Whisky {
     String name;
     String country;
     String whiskyType;
-    int abv;
+    String distillery;
+    String cask;
+    String imagePath;
+    float abv;
     ArrayList<String> aroma;
     ArrayList<String> taste;
     ArrayList<String> finish;
@@ -15,7 +18,10 @@ public class Whisky {
             String name,
             String country,
             String whiskyType,
-            int abv,
+            String distillery,
+            String cask,
+            String imagePath,
+            float abv,
             ArrayList<String> aroma,
             ArrayList<String> taste,
             ArrayList<String> finish
@@ -24,6 +30,9 @@ public class Whisky {
         this.name = name;
         this.country = country;
         this.whiskyType = whiskyType;
+        this.distillery = distillery;
+        this.cask = cask;
+        this.imagePath = imagePath;
         this.abv = abv;
         this.aroma = aroma;
         this.finish = finish;
@@ -42,8 +51,20 @@ public class Whisky {
         return whiskyType;
     }
 
-    public int getAbv() {
+    public String getDistillery() {
+        return distillery;
+    }
+
+    public String getCask() {
+        return cask;
+    }
+
+    public float getAbv() {
         return abv;
+    }
+
+    public String getImagePath() {
+        return imagePath;
     }
 
     public ArrayList<String> getAroma() {
