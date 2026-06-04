@@ -1,0 +1,17 @@
+id|question|left_label|right_label|targets
+q01|Do you enjoy fruity aromas?|do_not_enjoy|enjoy|sherry_cask
+q02|Do you enjoy floral aromas?|do_not_enjoy|enjoy|bourbon_cask
+q03|Do you enjoy whiskies with a rich, syrupy texture?|do_not_enjoy|enjoy|sherry_cask
+q04|Do you have a strong aversion to the smell of burning wood or smoke?|strong_aversion|no_aversion|peat
+q05|Do you like bold and intense aromas?|do_not_like|like|peat
+q06|Do you like soft and delicate aromas?|do_not_like|like|blended
+q07|Do you enjoy vanilla aromas?|do_not_enjoy|enjoy|bourbon,bourbon_cask
+q08|Do you enjoy spirits above 50% ABV?|do_not_enjoy|enjoy|bourbon,independent_bottling
+q09|Do you enjoy exploring unusual and distinctive aromas?|do_not_enjoy|enjoy|peat
+q10|Are you new to whisky?|experienced|beginner|blended
+q11|Do you enjoy whisky in highballs?|do_not_enjoy|enjoy|blended
+q12|Do you enjoy experiences that feel rare or hard to come by?|do_not_enjoy|enjoy|independent_bottling
+q13|Do you think a whisky's color is important?|not_important|important|bourbon_cask
+q14|Do you prefer well-aged whisky?|do_not_prefer|prefer|sherry_cask
+q15|Would you still want to find a whisky that matches you, even if the search is difficult and design matters too?|do_not_want|want|independent_bottling
+q16|What do you think of whisky with a simple aroma but a heavy, full-bodied taste?|do_not_prefer|prefer|bourbon

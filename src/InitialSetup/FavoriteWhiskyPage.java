@@ -4,6 +4,7 @@ import Ui.BackgroundPanel;
 import Ui.BaseList;
 import Ui.BaseSearchField;
 import Ui.ImageScaler;
+import Ui.ScreenScale;
 import Ui.StyledTabbedPane;
 import Whisky.Whisky;
 import Whisky.WhiskyList;
@@ -60,45 +61,50 @@ public class FavoriteWhiskyPage extends JFrame {
 
         JLabel titleLabel = new JLabel("Select Your Favorite Whiskies");
         titleLabel.setForeground(Color.WHITE);
-        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 30));
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, ScreenScale.scale(30)));
         titleLabel.setHorizontalAlignment(JLabel.CENTER);
 
         JPanel topPanel = new BackgroundPanel(new BorderLayout());
-        topPanel.setBorder(BorderFactory.createEmptyBorder(24, 24, 0, 24));
+        topPanel.setBorder(BorderFactory.createEmptyBorder(
+                ScreenScale.scale(24),
+                ScreenScale.scale(24),
+                0,
+                ScreenScale.scale(24)
+        ));
         topPanel.add(titleLabel, BorderLayout.CENTER);
 
-        listTabs.setPreferredSize(new Dimension(560, 420));
+        listTabs.setPreferredSize(ScreenScale.dimension(560, 420));
 
         nameSearchField.onChange(this::refreshList);
         refreshList();
 
         JPanel centerPanel = new BackgroundPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-        centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        centerPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 10)));
         nameSearchField.setAlignmentX(CENTER_ALIGNMENT);
         centerPanel.add(nameSearchField);
-        centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        centerPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 10)));
         listTabs.setAlignmentX(CENTER_ALIGNMENT);
         centerPanel.add(listTabs);
 
         JButton saveButton = new JButton("Save Favorites");
         saveButton.setFocusPainted(false);
         saveButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        saveButton.setFont(new Font("SansSerif", Font.BOLD, 18));
-        saveButton.setPreferredSize(new Dimension(220, 46));
+        saveButton.setFont(new Font("SansSerif", Font.BOLD, ScreenScale.scale(18)));
+        saveButton.setPreferredSize(ScreenScale.dimension(220, 46));
         saveButton.addActionListener(e -> saveFavoritesAndMove());
 
         JButton noTastedButton = new JButton("I Have Not Tried Whisky");
         noTastedButton.setFocusPainted(false);
         noTastedButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        noTastedButton.setFont(new Font("SansSerif", Font.BOLD, 16));
-        noTastedButton.setPreferredSize(new Dimension(280, 46));
+        noTastedButton.setFont(new Font("SansSerif", Font.BOLD, ScreenScale.scale(16)));
+        noTastedButton.setPreferredSize(ScreenScale.dimension(280, 46));
         noTastedButton.addActionListener(e -> saveEmptyFavoritesAndMove());
 
         JPanel bottomPanel = new BackgroundPanel();
-        bottomPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 32, 0));
+        bottomPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, ScreenScale.scale(32), 0));
         bottomPanel.add(saveButton);
-        bottomPanel.add(Box.createRigidArea(new Dimension(16, 0)));
+        bottomPanel.add(Box.createRigidArea(ScreenScale.dimension(16, 0)));
         bottomPanel.add(noTastedButton);
 
         add(topPanel, BorderLayout.NORTH);
@@ -143,16 +149,21 @@ public class FavoriteWhiskyPage extends JFrame {
 
     private JPanel createWhiskyItem(Whisky whisky) {
         JPanel itemPanel = new JPanel(new BorderLayout(12, 0));
-        itemPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 116));
-        itemPanel.setPreferredSize(new Dimension(540, 116));
+        itemPanel.setMaximumSize(ScreenScale.dimension(Integer.MAX_VALUE, 116));
+        itemPanel.setPreferredSize(ScreenScale.dimension(540, 116));
         itemPanel.setBackground(selectedWhiskies.contains(whisky) ? ITEM_SELECTED : ITEM_NORMAL);
-        itemPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 12));
+        itemPanel.setBorder(BorderFactory.createEmptyBorder(
+                ScreenScale.scale(10),
+                ScreenScale.scale(10),
+                ScreenScale.scale(10),
+                ScreenScale.scale(12)
+        ));
         itemPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         JLabel imageLabel = createImageLabel(whisky.getImagePath());
         JLabel nameLabel = new JLabel(whisky.getName());
         nameLabel.setForeground(Color.WHITE);
-        nameLabel.setFont(new Font("SansSerif", Font.BOLD, 17));
+        nameLabel.setFont(new Font("SansSerif", Font.BOLD, ScreenScale.scale(17)));
 
         itemPanel.addMouseListener(new MouseAdapter() {
             @Override
@@ -200,11 +211,16 @@ public class FavoriteWhiskyPage extends JFrame {
         for (int i = 0; i < tabs.size(); i++) {
             JPanel tabPanel = new BackgroundPanel();
             tabPanel.setLayout(new BoxLayout(tabPanel, BoxLayout.Y_AXIS));
-            tabPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+            tabPanel.setBorder(BorderFactory.createEmptyBorder(
+                    ScreenScale.scale(10),
+                    ScreenScale.scale(10),
+                    ScreenScale.scale(10),
+                    ScreenScale.scale(10)
+            ));
 
             for (Whisky whisky : tabs.get(i)) {
                 tabPanel.add(createWhiskyItem(whisky));
-                tabPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+                tabPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 10)));
             }
 
             listTabs.addTab(String.valueOf(i + 1), createListScrollPane(tabPanel));
@@ -214,7 +230,7 @@ public class FavoriteWhiskyPage extends JFrame {
     private JScrollPane createListScrollPane(JPanel panel) {
         JScrollPane listScrollPane = new JScrollPane(panel);
         listScrollPane.setBorder(BorderFactory.createEmptyBorder());
-        listScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        listScrollPane.getVerticalScrollBar().setUnitIncrement(ScreenScale.scale(16));
         return listScrollPane;
     }
 
@@ -224,7 +240,7 @@ public class FavoriteWhiskyPage extends JFrame {
 
         JLabel emptyLabel = new JLabel("No whisky data");
         emptyLabel.setForeground(Color.WHITE);
-        emptyLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
+        emptyLabel.setFont(new Font("SansSerif", Font.BOLD, ScreenScale.scale(16)));
         emptyLabel.setAlignmentX(CENTER_ALIGNMENT);
 
         panel.add(Box.createVerticalGlue());
@@ -235,7 +251,9 @@ public class FavoriteWhiskyPage extends JFrame {
 
     private JLabel createImageLabel(String imagePath) {
         JLabel imageLabel = new JLabel();
-        imageLabel.setPreferredSize(new Dimension(THUMB_WIDTH, THUMB_HEIGHT));
+        int thumbWidth = ScreenScale.scale(THUMB_WIDTH);
+        int thumbHeight = ScreenScale.scale(THUMB_HEIGHT);
+        imageLabel.setPreferredSize(new Dimension(thumbWidth, thumbHeight));
         imageLabel.setOpaque(true);
         imageLabel.setBackground(new Color(45, 45, 45));
         imageLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -250,7 +268,7 @@ public class FavoriteWhiskyPage extends JFrame {
             return imageLabel;
         }
 
-        ImageIcon icon = ImageScaler.loadScaledIcon(imagePath, THUMB_WIDTH, THUMB_HEIGHT);
+        ImageIcon icon = ImageScaler.loadScaledIcon(imagePath, thumbWidth, thumbHeight);
         if (icon != null) {
             imageLabel.setIcon(icon);
         }
@@ -266,4 +284,5 @@ public class FavoriteWhiskyPage extends JFrame {
             e.printStackTrace();
         }
     }
+
 }

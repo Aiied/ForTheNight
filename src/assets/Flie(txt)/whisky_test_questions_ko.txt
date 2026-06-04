@@ -1,0 +1,17 @@
+id|question|left_label|right_label|targets
+q01|과일 향을 좋아하시나요?|좋아하지 않음|좋아함|sherry_cask
+q02|꽃 향을 좋아하시나요?|좋아하지 않음|좋아함|bourbon_cask
+q03|질감이 꾸덕한 술을 좋아하시나요?|좋아하지 않음|좋아함|sherry_cask
+q04|나무 타는 냄새에 거부감이 있나요?|거부감이 심함|거부감 없음|peat
+q05|향이 강렬한게 좋으신가요?|싫어함|좋아함|peat
+q06|향이 은은한게 좋으신가요?|싫어함|좋아함|blended
+q07|바닐라 향을 좋아하시나요?|좋아하지 않음|좋아함|bourbon,bourbon_cask
+q08|50도 이상의 술을 즐기시나요?|즐기지 않음|즐김|bourbon,independent_bottling
+q09|독특한 향을 경험해보는걸 즐기시나요?|즐기지 않음|즐김|peat
+q10|위스키 초심자이신가요?|숙련자임|초심자임|blended
+q11|하이볼로 위스키를 즐기시나요?|즐기지 않음|즐김|blended
+q12|쉽게 해 볼 수 없는 경험을 즐기시나요?|즐기지 않음|즐김|independent_bottling
+q13|술의 색깔을 중요하게 생각하시나요?|중요하지 않음|중요함|bourbon_cask
+q14|숙성이 오래된 위스키를 선호하시나요?|선호하지 않음|선호함|sherry_cask
+q15|어려움이 있더라도 디자인까지 나에게 맞는 위스키를 찾고 싶으신가요?|원하지 않음|원함|independent_bottling
+q16|향이 단순하지만 맛이 묵직한 위스키에 대해 어떻게 생각하시나요?|선호하지 않음|선호함|bourbon

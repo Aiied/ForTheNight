@@ -9,11 +9,12 @@ public class  Main {
     public static void main(String[] args){
         SwingUtilities.invokeLater(() -> {
             File favoriteFile = new File(FAVORITE_FILE_PATH);
-            if (favoriteFile.exists()) {
-                new MainPage();
-            } else {
+            if (!favoriteFile.exists()) {
                 new FavoriteWhiskyPage();
+                return;
             }
+
+            new MainPage();
         });
     }
 }
