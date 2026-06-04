@@ -7,8 +7,8 @@ import java.awt.Dimension;
 import java.awt.Image;
 
 public abstract class ImageMenuButton extends JButton {
-    private static final int IMAGE_WIDTH = 360;
-    private static final int IMAGE_HEIGHT = 120;
+    private static final int IMAGE_WIDTH = 300;
+    private static final int IMAGE_HEIGHT = 96;
 
     protected ImageMenuButton(String imagePath) {
         super();

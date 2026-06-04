@@ -20,7 +20,10 @@ public class TastingNoteList extends BaseList<TastingNote> {
 
     @Override
     protected TastingNote parseLine(String line) {
-        String[] values = line.split("\\|");
+        String[] values = line.split("\\|", -1);
+        if (values.length < 6) {
+            return null;
+        }
 
         return new TastingNote(
                 values[0],
@@ -28,7 +31,16 @@ public class TastingNoteList extends BaseList<TastingNote> {
                 parseNotes(values[2]),
                 parseNotes(values[3]),
                 parseNotes(values[4]),
-                Integer.parseInt(values[5])
+                parseScore(values[5]),
+                values.length > 6 ? values[6] : ""
         );
+    }
+
+    private int parseScore(String text) {
+        try {
+            return Integer.parseInt(text.trim());
+        } catch (Exception e) {
+            return 0;
+        }
     }
 }

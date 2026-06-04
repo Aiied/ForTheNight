@@ -9,6 +9,7 @@ public class TastingNote {
     ArrayList<String> taste;
     ArrayList<String> finish;
     int score;
+    String detailReview;
 
     public TastingNote(
             String whiskyName,
@@ -16,7 +17,8 @@ public class TastingNote {
             ArrayList<String> aroma,
             ArrayList<String> taste,
             ArrayList<String> finish,
-            int score
+            int score,
+            String detailReview
     ) {
         this.whiskyName = whiskyName;
         this.date = date;
@@ -24,6 +26,7 @@ public class TastingNote {
         this.taste = taste;
         this.finish = finish;
         this.score = score;
+        this.detailReview = detailReview;
     }
 
     public String getWhiskyName() {
@@ -48,5 +51,9 @@ public class TastingNote {
 
     public int getScore() {
         return score;
+    }
+
+    public String getDetailReview() {
+        return detailReview;
     }
 }

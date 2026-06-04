@@ -3,6 +3,7 @@ package Whisky;
 import Ui.Button.BackButton;
 import Ui.Button.FavoriteStarButton;
 import Ui.BackgroundPanel;
+import Ui.ImageScaler;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -17,11 +18,13 @@ import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Image;
 import java.io.File;
 import java.util.ArrayList;
 
 public class WhiskyDetailPage extends JFrame {
+    private static final int DETAIL_IMAGE_WIDTH = 280;
+    private static final int DETAIL_IMAGE_HEIGHT = 340;
+
     private final Whisky whisky;
     private final JFrame previousPage;
 
@@ -125,8 +128,8 @@ public class WhiskyDetailPage extends JFrame {
 
     private JLabel createImageLabel(Whisky whisky) {
         JLabel imageLabel = new JLabel();
-        imageLabel.setPreferredSize(new Dimension(160, 190));
-        imageLabel.setMaximumSize(new Dimension(160, 190));
+        imageLabel.setPreferredSize(new Dimension(DETAIL_IMAGE_WIDTH, DETAIL_IMAGE_HEIGHT));
+        imageLabel.setMaximumSize(new Dimension(DETAIL_IMAGE_WIDTH, DETAIL_IMAGE_HEIGHT));
         imageLabel.setOpaque(true);
         imageLabel.setBackground(new java.awt.Color(45, 45, 45));
         imageLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -142,9 +145,10 @@ public class WhiskyDetailPage extends JFrame {
             return imageLabel;
         }
 
-        ImageIcon icon = new ImageIcon(resolvedPath);
-        Image scaledImage = icon.getImage().getScaledInstance(160, 190, Image.SCALE_SMOOTH);
-        imageLabel.setIcon(new ImageIcon(scaledImage));
+        ImageIcon icon = ImageScaler.loadScaledIcon(resolvedPath, DETAIL_IMAGE_WIDTH, DETAIL_IMAGE_HEIGHT);
+        if (icon != null) {
+            imageLabel.setIcon(icon);
+        }
 
         return imageLabel;
     }

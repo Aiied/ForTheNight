@@ -2,6 +2,7 @@ package TastingNote;
 
 import Ui.Button.BackButton;
 import Ui.BackgroundPanel;
+import Ui.StarIconFactory;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -15,11 +16,13 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ImageIcon;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FlowLayout;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -27,11 +30,16 @@ import java.time.LocalDate;
 
 public class NewNotePage extends JFrame {
     private static final String NOTE_FILE_PATH = "src/assets/Flie(txt)/tastingNotes.txt";
+    private static final float STAR_ON_ALPHA = 1.0f;
     private final JTextField nameField = new JTextField();
     private final JTextField aromaField = new JTextField();
     private final JTextField tasteField = new JTextField();
     private final JTextField finishField = new JTextField();
     private final JTextArea detailArea = new JTextArea(8, 28);
+    private final JButton[] ratingButtons = new JButton[5];
+    private final ImageIcon starOnIcon = StarIconFactory.createStarIcon(30, STAR_ON_ALPHA);
+    private final ImageIcon starOffIcon = StarIconFactory.createStarIcon(30, 1.0f, Color.WHITE);
+    private int selectedScore = 0;
 
     public NewNotePage(JFrame previousPage) {
         setTitle("New Note");
@@ -61,12 +69,13 @@ public class NewNotePage extends JFrame {
         formPanel.setBackground(new Color(18, 18, 18, 220));
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
         formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        formPanel.setMaximumSize(new Dimension(760, 520));
+        formPanel.setMaximumSize(new Dimension(760, 600));
 
         formPanel.add(createFieldBlock("Name", nameField));
         formPanel.add(createFieldBlock("Aroma (comma separated)", aromaField));
         formPanel.add(createFieldBlock("Taste (comma separated)", tasteField));
         formPanel.add(createFieldBlock("Finish (comma separated)", finishField));
+        formPanel.add(createRatingBlock());
         formPanel.add(createAreaBlock("Detailed Review", detailArea));
 
         JButton saveButton = new JButton("Save");
@@ -96,6 +105,7 @@ public class NewNotePage extends JFrame {
         add(topPanel, BorderLayout.NORTH);
         add(centerPanel, BorderLayout.CENTER);
 
+        setScore(0);
         setVisible(true);
     }
 
@@ -137,6 +147,53 @@ public class NewNotePage extends JFrame {
         return block;
     }
 
+    private JPanel createRatingBlock() {
+        JPanel block = new JPanel(new BorderLayout(0, 6));
+        block.setOpaque(false);
+        block.setBorder(BorderFactory.createEmptyBorder(6, 0, 6, 0));
+
+        JLabel titleLabel = new JLabel("Rating");
+        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 14));
+
+        JPanel starsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
+        starsPanel.setOpaque(false);
+
+        for (int i = 0; i < ratingButtons.length; i++) {
+            final int score = i + 1;
+            JButton starButton = new JButton("\u2606");
+            starButton.setFocusPainted(false);
+            starButton.setBorderPainted(false);
+            starButton.setContentAreaFilled(false);
+            starButton.setOpaque(false);
+            starButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            starButton.setFont(new Font("SansSerif", Font.BOLD, 24));
+            starButton.setPreferredSize(new Dimension(40, 40));
+            starButton.addActionListener(e -> setScore(score));
+            ratingButtons[i] = starButton;
+            starsPanel.add(starButton);
+        }
+
+        block.add(titleLabel, BorderLayout.NORTH);
+        block.add(starsPanel, BorderLayout.CENTER);
+        return block;
+    }
+
+    private void setScore(int score) {
+        selectedScore = Math.max(0, Math.min(score, ratingButtons.length));
+
+        for (int i = 0; i < ratingButtons.length; i++) {
+            boolean filled = i < selectedScore;
+            if (starOnIcon != null && starOffIcon != null) {
+                ratingButtons[i].setText("");
+                ratingButtons[i].setIcon(filled ? starOnIcon : starOffIcon);
+            } else {
+                ratingButtons[i].setText(filled ? "\u2605" : "\u2606");
+                ratingButtons[i].setForeground(filled ? new Color(242, 196, 74) : Color.WHITE);
+            }
+        }
+    }
+
     private void saveNote() {
         String name = nameField.getText().trim();
         String aroma = aromaField.getText().trim();
@@ -150,7 +207,7 @@ public class NewNotePage extends JFrame {
         }
 
         String today = LocalDate.now().toString();
-        String line = String.join("|", name, today, aroma, taste, finish, "0", detail);
+        String line = String.join("|", name, today, aroma, taste, finish, Integer.toString(selectedScore), detail);
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(NOTE_FILE_PATH, true))) {
             writer.write(line);
@@ -169,5 +226,6 @@ public class NewNotePage extends JFrame {
         tasteField.setText("");
         finishField.setText("");
         detailArea.setText("");
+        setScore(0);
     }
 }

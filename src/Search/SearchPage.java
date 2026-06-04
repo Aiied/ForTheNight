@@ -1,9 +1,12 @@
 package Search;
 
 import Ui.Button.BackButton;
+import Ui.BaseList;
 import Ui.BaseSearchField;
 import Ui.BackgroundPanel;
 import Ui.Button.FavoriteStarButton;
+import Ui.ImageScaler;
+import Ui.StyledTabbedPane;
 import Whisky.Whisky;
 import Whisky.WhiskyDetailPage;
 import Whisky.WhiskyList;
@@ -16,7 +19,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -25,10 +27,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchPage extends JFrame {
+    private static final int ITEMS_PER_TAB = 5;
+    private static final int THUMB_WIDTH = 84;
+    private static final int THUMB_HEIGHT = 96;
+
     private final JFrame previousPage;
     private final ArrayList<Whisky> allWhiskies;
     private final Filter filter;
-    private final JPanel listPanel;
+    private final JTabbedPane listTabs;
     private final BaseSearchField nameField;
     private final JComboBox<String> countryBox;
     private final JComboBox<String> typeBox;
@@ -98,9 +104,7 @@ public class SearchPage extends JFrame {
         gbc.gridy++;
         filterPanel.add(searchButton, gbc);
 
-        listPanel = new BackgroundPanel();
-        listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
-        listPanel.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
+        listTabs = new StyledTabbedPane();
         refreshList(allWhiskies);
 
         JPanel centerPanel = new BackgroundPanel();
@@ -110,12 +114,8 @@ public class SearchPage extends JFrame {
         centerPanel.add(nameField);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        JScrollPane scrollPane = new JScrollPane(listPanel);
-        scrollPane.setOpaque(false);
-        scrollPane.getViewport().setOpaque(false);
-        scrollPane.setBorder(null);
-        scrollPane.setAlignmentX(CENTER_ALIGNMENT);
-        centerPanel.add(scrollPane);
+        listTabs.setAlignmentX(CENTER_ALIGNMENT);
+        centerPanel.add(listTabs);
 
         add(topPanel, BorderLayout.NORTH);
         add(centerPanel, BorderLayout.CENTER);
@@ -152,33 +152,58 @@ public class SearchPage extends JFrame {
     }
 
     private void refreshList(List<Whisky> whiskies) {
-        listPanel.removeAll();
-        if (whiskies.isEmpty()) {
-            listPanel.add(createEmptyMessage());
-        } else {
-            for (Whisky whisky : whiskies) {
-                listPanel.add(createWhiskyItem(whisky));
-                listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-            }
+        listTabs.removeAll();
+        List<List<Whisky>> tabs = BaseList.partition(whiskies, ITEMS_PER_TAB);
+
+        if (tabs.isEmpty()) {
+            listTabs.addTab("1", createListScrollPane(createEmptyMessagePanel()));
+            listTabs.setEnabledAt(0, false);
+            return;
         }
-        listPanel.revalidate();
-        listPanel.repaint();
+
+        for (int i = 0; i < tabs.size(); i++) {
+            JPanel tabPanel = new BackgroundPanel();
+            tabPanel.setLayout(new BoxLayout(tabPanel, BoxLayout.Y_AXIS));
+            tabPanel.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
+
+            for (Whisky whisky : tabs.get(i)) {
+                tabPanel.add(createWhiskyItem(whisky));
+                tabPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+            }
+
+            listTabs.addTab(String.valueOf(i + 1), createListScrollPane(tabPanel));
+        }
     }
 
-    private JLabel createEmptyMessage() {
+    private JScrollPane createListScrollPane(JPanel panel) {
+        JScrollPane scrollPane = new JScrollPane(panel);
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+        scrollPane.setBorder(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        return scrollPane;
+    }
+
+    private JPanel createEmptyMessagePanel() {
+        JPanel panel = new BackgroundPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
         JLabel emptyLabel = new JLabel("No whisky data");
         emptyLabel.setForeground(java.awt.Color.WHITE);
         emptyLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
         emptyLabel.setAlignmentX(CENTER_ALIGNMENT);
         emptyLabel.setBorder(BorderFactory.createEmptyBorder(40, 0, 0, 0));
 
-        return emptyLabel;
+        panel.add(Box.createVerticalGlue());
+        panel.add(emptyLabel);
+        panel.add(Box.createVerticalGlue());
+        return panel;
     }
 
     private JPanel createWhiskyItem(Whisky whisky) {
         JPanel itemPanel = new JPanel(new BorderLayout(16, 0));
-        itemPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 92));
-        itemPanel.setPreferredSize(new Dimension(320, 92));
+        itemPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 116));
+        itemPanel.setPreferredSize(new Dimension(360, 116));
         itemPanel.setBackground(new java.awt.Color(24, 24, 24));
         itemPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 14));
         itemPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -186,7 +211,7 @@ public class SearchPage extends JFrame {
         JLabel imageLabel = createImageLabel(whisky);
         JLabel nameLabel = new JLabel(whisky.getName());
         nameLabel.setForeground(java.awt.Color.WHITE);
-        nameLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
+        nameLabel.setFont(new Font("SansSerif", Font.BOLD, 17));
         FavoriteStarButton starButton = new FavoriteStarButton(whisky.getName(), 28);
 
         itemPanel.add(imageLabel, BorderLayout.WEST);
@@ -205,7 +230,7 @@ public class SearchPage extends JFrame {
 
     private JLabel createImageLabel(Whisky whisky) {
         JLabel imageLabel = new JLabel();
-        imageLabel.setPreferredSize(new Dimension(64, 72));
+        imageLabel.setPreferredSize(new Dimension(THUMB_WIDTH, THUMB_HEIGHT));
         imageLabel.setOpaque(true);
         imageLabel.setBackground(new java.awt.Color(45, 45, 45));
         imageLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -221,9 +246,10 @@ public class SearchPage extends JFrame {
             return imageLabel;
         }
 
-        ImageIcon icon = new ImageIcon(resolvedPath);
-        Image scaledImage = icon.getImage().getScaledInstance(64, 72, Image.SCALE_SMOOTH);
-        imageLabel.setIcon(new ImageIcon(scaledImage));
+        ImageIcon icon = ImageScaler.loadScaledIcon(resolvedPath, THUMB_WIDTH, THUMB_HEIGHT);
+        if (icon != null) {
+            imageLabel.setIcon(icon);
+        }
 
         return imageLabel;
     }

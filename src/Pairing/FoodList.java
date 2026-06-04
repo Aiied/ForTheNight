@@ -20,11 +20,19 @@ public class FoodList extends BaseList<Food> {
 
     @Override
     protected Food parseLine(String line) {
-        String[] values = line.split("\\|");
+        String[] values = line.split("\\|", -1);
+        if (values.length < 7) {
+            return null;
+        }
 
         return new Food(
                 values[0],
-                parseNotes(values[1])
+                values[1],
+                values[2],
+                values[3],
+                values[4],
+                values[5],
+                values[6]
         );
     }
 }

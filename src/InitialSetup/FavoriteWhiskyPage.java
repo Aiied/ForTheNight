@@ -1,7 +1,10 @@
 package InitialSetup;
 
 import Ui.BackgroundPanel;
+import Ui.BaseList;
 import Ui.BaseSearchField;
+import Ui.ImageScaler;
+import Ui.StyledTabbedPane;
 import Whisky.Whisky;
 import Whisky.WhiskyList;
 
@@ -15,12 +18,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedWriter;
@@ -29,17 +32,21 @@ import java.io.IOException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 public class FavoriteWhiskyPage extends JFrame {
     private static final String WHISKY_FILE_PATH = "src/assets/Flie(txt)/whiskyList.txt";
     private static final String FAVORITE_FILE_PATH = "src/assets/Flie(txt)/favoriteWhiskies.txt";
+    private static final int ITEMS_PER_TAB = 5;
+    private static final int THUMB_WIDTH = 84;
+    private static final int THUMB_HEIGHT = 96;
     private static final Color ITEM_NORMAL = new Color(24, 24, 24);
     private static final Color ITEM_SELECTED = new Color(110, 72, 24);
 
     private final ArrayList<Whisky> whiskies;
     private final Set<Whisky> selectedWhiskies = new LinkedHashSet<>();
-    private final JPanel listPanel = new BackgroundPanel();
+    private final JTabbedPane listTabs = new StyledTabbedPane();
     private final BaseSearchField nameSearchField = new BaseSearchField("search", 560, 32) { };
 
     public FavoriteWhiskyPage() {
@@ -60,16 +67,10 @@ public class FavoriteWhiskyPage extends JFrame {
         topPanel.setBorder(BorderFactory.createEmptyBorder(24, 24, 0, 24));
         topPanel.add(titleLabel, BorderLayout.CENTER);
 
-        listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
-        listPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        listTabs.setPreferredSize(new Dimension(560, 420));
 
         nameSearchField.onChange(this::refreshList);
-
         refreshList();
-
-        JScrollPane listScrollPane = new JScrollPane(listPanel);
-        listScrollPane.setBorder(BorderFactory.createEmptyBorder());
-        listScrollPane.setPreferredSize(new Dimension(560, 420));
 
         JPanel centerPanel = new BackgroundPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
@@ -77,8 +78,8 @@ public class FavoriteWhiskyPage extends JFrame {
         nameSearchField.setAlignmentX(CENTER_ALIGNMENT);
         centerPanel.add(nameSearchField);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        listScrollPane.setAlignmentX(CENTER_ALIGNMENT);
-        centerPanel.add(listScrollPane);
+        listTabs.setAlignmentX(CENTER_ALIGNMENT);
+        centerPanel.add(listTabs);
 
         JButton saveButton = new JButton("Save Favorites");
         saveButton.setFocusPainted(false);
@@ -92,10 +93,7 @@ public class FavoriteWhiskyPage extends JFrame {
         noTastedButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         noTastedButton.setFont(new Font("SansSerif", Font.BOLD, 16));
         noTastedButton.setPreferredSize(new Dimension(280, 46));
-        noTastedButton.addActionListener(e -> {
-            new TastePreferencePage(this);
-            setVisible(false);
-        });
+        noTastedButton.addActionListener(e -> saveEmptyFavoritesAndMove());
 
         JPanel bottomPanel = new BackgroundPanel();
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 32, 0));
@@ -131,10 +129,22 @@ public class FavoriteWhiskyPage extends JFrame {
         dispose();
     }
 
+    private void saveEmptyFavoritesAndMove() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FAVORITE_FILE_PATH))) {
+            writer.write("");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        openMainPage();
+        dispose();
+    }
+
     private JPanel createWhiskyItem(Whisky whisky) {
         JPanel itemPanel = new JPanel(new BorderLayout(12, 0));
-        itemPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 92));
-        itemPanel.setPreferredSize(new Dimension(520, 92));
+        itemPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 116));
+        itemPanel.setPreferredSize(new Dimension(540, 116));
         itemPanel.setBackground(selectedWhiskies.contains(whisky) ? ITEM_SELECTED : ITEM_NORMAL);
         itemPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 12));
         itemPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -142,7 +152,7 @@ public class FavoriteWhiskyPage extends JFrame {
         JLabel imageLabel = createImageLabel(whisky.getImagePath());
         JLabel nameLabel = new JLabel(whisky.getName());
         nameLabel.setForeground(Color.WHITE);
-        nameLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
+        nameLabel.setFont(new Font("SansSerif", Font.BOLD, 17));
 
         itemPanel.addMouseListener(new MouseAdapter() {
             @Override
@@ -169,23 +179,63 @@ public class FavoriteWhiskyPage extends JFrame {
 
     private void refreshList() {
         String keyword = nameSearchField.getSearchKeyword().toLowerCase();
-        listPanel.removeAll();
+        ArrayList<Whisky> filtered = new ArrayList<>();
 
         for (Whisky whisky : whiskies) {
             if (!keyword.isBlank() && !whisky.getName().toLowerCase().contains(keyword)) {
                 continue;
             }
-            listPanel.add(createWhiskyItem(whisky));
-            listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+            filtered.add(whisky);
         }
 
-        listPanel.revalidate();
-        listPanel.repaint();
+        listTabs.removeAll();
+        List<List<Whisky>> tabs = BaseList.partition(filtered, ITEMS_PER_TAB);
+
+        if (tabs.isEmpty()) {
+            listTabs.addTab("1", createListScrollPane(createEmptyMessagePanel()));
+            listTabs.setEnabledAt(0, false);
+            return;
+        }
+
+        for (int i = 0; i < tabs.size(); i++) {
+            JPanel tabPanel = new BackgroundPanel();
+            tabPanel.setLayout(new BoxLayout(tabPanel, BoxLayout.Y_AXIS));
+            tabPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+            for (Whisky whisky : tabs.get(i)) {
+                tabPanel.add(createWhiskyItem(whisky));
+                tabPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+            }
+
+            listTabs.addTab(String.valueOf(i + 1), createListScrollPane(tabPanel));
+        }
+    }
+
+    private JScrollPane createListScrollPane(JPanel panel) {
+        JScrollPane listScrollPane = new JScrollPane(panel);
+        listScrollPane.setBorder(BorderFactory.createEmptyBorder());
+        listScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        return listScrollPane;
+    }
+
+    private JPanel createEmptyMessagePanel() {
+        JPanel panel = new BackgroundPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        JLabel emptyLabel = new JLabel("No whisky data");
+        emptyLabel.setForeground(Color.WHITE);
+        emptyLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
+        emptyLabel.setAlignmentX(CENTER_ALIGNMENT);
+
+        panel.add(Box.createVerticalGlue());
+        panel.add(emptyLabel);
+        panel.add(Box.createVerticalGlue());
+        return panel;
     }
 
     private JLabel createImageLabel(String imagePath) {
         JLabel imageLabel = new JLabel();
-        imageLabel.setPreferredSize(new Dimension(64, 72));
+        imageLabel.setPreferredSize(new Dimension(THUMB_WIDTH, THUMB_HEIGHT));
         imageLabel.setOpaque(true);
         imageLabel.setBackground(new Color(45, 45, 45));
         imageLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -200,9 +250,10 @@ public class FavoriteWhiskyPage extends JFrame {
             return imageLabel;
         }
 
-        ImageIcon icon = new ImageIcon(imagePath);
-        Image scaledImage = icon.getImage().getScaledInstance(64, 72, Image.SCALE_SMOOTH);
-        imageLabel.setIcon(new ImageIcon(scaledImage));
+        ImageIcon icon = ImageScaler.loadScaledIcon(imagePath, THUMB_WIDTH, THUMB_HEIGHT);
+        if (icon != null) {
+            imageLabel.setIcon(icon);
+        }
         return imageLabel;
     }
 
