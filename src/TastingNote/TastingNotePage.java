@@ -1,8 +1,15 @@
 package TastingNote;
 
-import Ui.Button.BackButton;
-import Ui.BackgroundPanel;
-import Ui.StarIconFactory;
+import Ui.buttons.BackButton;
+import Ui.buttons.AbstractActionButton;
+import Ui.component.FixedImageLabel;
+import Ui.icon.StarIconFactory;
+import Ui.panel.BackgroundPanel;
+import Ui.theme.ScreenScale;
+import Ui.theme.ThemeColors;
+import Ui.theme.ThemeFonts;
+import Ui.theme.ThemeSizes;
+import Ui.util.AppPaths;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -14,22 +21,20 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 
 public class TastingNotePage extends JFrame {
-    private static final String NOTE_FILE_PATH = "src/assets/Flie(txt)/tastingNotes.txt";
     private static final int STAR_COUNT = 5;
-
     private final JFrame previousPage;
     private final JPanel listPanel = new BackgroundPanel();
-    private final ImageIcon scoreOnIcon = StarIconFactory.createStarIcon(18, 1.0f);
-    private final ImageIcon scoreOffIcon = StarIconFactory.createStarIcon(18, 1.0f, Color.WHITE);
+    private final ImageIcon scoreOnIcon = StarIconFactory.createStarIcon(ScreenScale.scale(18), 1.0f);
+    private final ImageIcon scoreOffIcon = StarIconFactory.createStarIcon(ScreenScale.scale(18), 1.0f, ThemeColors.TEXT_WHITE);
 
     public TastingNotePage() {
         this(null);
@@ -52,16 +57,31 @@ public class TastingNotePage extends JFrame {
         });
 
         JPanel topPanel = new BackgroundPanel(new BorderLayout());
-        topPanel.setBorder(BorderFactory.createEmptyBorder(12, 16, 0, 16));
+        topPanel.setBorder(BorderFactory.createEmptyBorder(
+                ScreenScale.scale(12),
+                ScreenScale.scale(16),
+                0,
+                ScreenScale.scale(16)
+        ));
         topPanel.add(backButton, BorderLayout.WEST);
 
         JLabel titleLabel = new JLabel("Tasting Notes");
-        titleLabel.setForeground(Color.WHITE);
-        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 24));
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(10, 18, 12, 0));
+        titleLabel.setForeground(ThemeColors.TEXT_WHITE);
+        titleLabel.setFont(ThemeFonts.bold(24));
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(
+                ScreenScale.scale(10),
+                ScreenScale.scale(18),
+                ScreenScale.scale(12),
+                0
+        ));
 
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
-        listPanel.setBorder(BorderFactory.createEmptyBorder(8, 16, 16, 16));
+        listPanel.setBorder(BorderFactory.createEmptyBorder(
+                ScreenScale.scale(8),
+                ScreenScale.scale(16),
+                ScreenScale.scale(16),
+                ScreenScale.scale(16)
+        ));
 
         refreshList();
 
@@ -69,30 +89,37 @@ public class TastingNotePage extends JFrame {
         listScrollPane.setOpaque(false);
         listScrollPane.getViewport().setOpaque(false);
         listScrollPane.setBorder(null);
-        listScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        listScrollPane.getVerticalScrollBar().setUnitIncrement(ScreenScale.scale(16));
 
         JPanel centerPanel = new BackgroundPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.add(titleLabel);
         centerPanel.add(listScrollPane);
 
-        JButton newNoteButton = new JButton("New Note");
-        newNoteButton.setFocusPainted(false);
-        newNoteButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        newNoteButton.setFont(new Font("SansSerif", Font.BOLD, 16));
-        newNoteButton.setPreferredSize(new Dimension(180, 44));
+        JButton newNoteButton = new AbstractActionButton("New Note", ScreenScale.scale(16)) { };
+        newNoteButton.setPreferredSize(ScreenScale.dimension(
+                ThemeSizes.NOTE_ACTION_BUTTON_WIDTH,
+                ThemeSizes.NOTE_ACTION_BUTTON_HEIGHT
+        ));
         newNoteButton.addActionListener(e -> {
             new NewNotePage(this);
             setVisible(false);
         });
 
         JPanel bottomPanel = new BackgroundPanel();
-        bottomPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 32, 0));
+        bottomPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, ScreenScale.scale(32), 0));
         bottomPanel.add(newNoteButton);
 
         add(topPanel, BorderLayout.NORTH);
         add(centerPanel, BorderLayout.CENTER);
         add(bottomPanel, BorderLayout.SOUTH);
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowActivated(WindowEvent e) {
+                refreshList();
+            }
+        });
 
         setVisible(true);
     }
@@ -100,64 +127,86 @@ public class TastingNotePage extends JFrame {
     private void refreshList() {
         listPanel.removeAll();
 
-        List<TastingNote> notes = new TastingNoteList(NOTE_FILE_PATH).getTastingNotes();
+        List<TastingNote> notes = new TastingNoteList(AppPaths.TASTING_NOTES_FILE).getTastingNotes();
         if (notes.isEmpty()) {
             JLabel emptyLabel = new JLabel("No tasting notes yet.");
-            emptyLabel.setForeground(Color.WHITE);
-            emptyLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
+            emptyLabel.setForeground(ThemeColors.TEXT_WHITE);
+            emptyLabel.setFont(ThemeFonts.bold(16));
             emptyLabel.setAlignmentX(CENTER_ALIGNMENT);
-            emptyLabel.setBorder(BorderFactory.createEmptyBorder(40, 0, 0, 0));
+            emptyLabel.setBorder(BorderFactory.createEmptyBorder(ScreenScale.scale(40), 0, 0, 0));
             listPanel.add(emptyLabel);
             listPanel.revalidate();
             listPanel.repaint();
             return;
         }
 
-        for (TastingNote note : notes) {
-            listPanel.add(createNoteItem(note));
-            listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        for (int i = 0; i < notes.size(); i++) {
+            listPanel.add(createNoteItem(notes.get(i), i));
+            listPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 10)));
         }
 
         listPanel.revalidate();
         listPanel.repaint();
     }
 
-    private JPanel createNoteItem(TastingNote note) {
+    private JPanel createNoteItem(TastingNote note, int noteIndex) {
         JPanel itemPanel = new JPanel(new BorderLayout(12, 8));
-        itemPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 108));
-        itemPanel.setPreferredSize(new Dimension(620, 108));
-        itemPanel.setBackground(new Color(24, 24, 24));
-        itemPanel.setBorder(BorderFactory.createEmptyBorder(12, 14, 12, 14));
+        itemPanel.setMaximumSize(ScreenScale.dimension(Integer.MAX_VALUE, 108));
+        itemPanel.setPreferredSize(ScreenScale.dimension(
+                ThemeSizes.TASTING_NOTE_ITEM_WIDTH,
+                ThemeSizes.TASTING_NOTE_ITEM_HEIGHT
+        ));
+        itemPanel.setBackground(ThemeColors.SURFACE_CARD);
+        itemPanel.setBorder(BorderFactory.createEmptyBorder(
+                ScreenScale.scale(12),
+                ScreenScale.scale(14),
+                ScreenScale.scale(12),
+                ScreenScale.scale(14)
+        ));
         itemPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
+        JLabel imageLabel = new FixedImageLabel(
+                note.getImagePath(),
+                ThemeSizes.TASTING_NOTE_THUMB_WIDTH,
+                ThemeSizes.TASTING_NOTE_THUMB_HEIGHT,
+                ThemeSizes.scaledTastingNoteThumb()
+        );
+
         JLabel nameLabel = new JLabel(note.getWhiskyName());
-        nameLabel.setForeground(Color.WHITE);
-        nameLabel.setFont(new Font("SansSerif", Font.BOLD, 17));
+        nameLabel.setForeground(ThemeColors.TEXT_WHITE);
+        nameLabel.setFont(ThemeFonts.bold(17));
 
         JLabel dateLabel = new JLabel(note.getDate());
-        dateLabel.setForeground(new Color(170, 170, 170));
-        dateLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        dateLabel.setForeground(ThemeColors.TEXT_SECONDARY);
+        dateLabel.setFont(ThemeFonts.plain(12));
 
         JPanel textPanel = new JPanel();
         textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
         textPanel.setOpaque(false);
         textPanel.add(nameLabel);
-        textPanel.add(Box.createRigidArea(new Dimension(0, 4)));
+        textPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 4)));
         textPanel.add(dateLabel);
+        if (note.getImagePath() != null && !note.getImagePath().isBlank()) {
+            JLabel photoLabel = new JLabel("Photo attached");
+            photoLabel.setForeground(ThemeColors.TEXT_MUTED);
+            photoLabel.setFont(ThemeFonts.plain(12));
+            textPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 4)));
+            textPanel.add(photoLabel);
+        }
 
+        itemPanel.add(imageLabel, BorderLayout.WEST);
         itemPanel.add(textPanel, BorderLayout.CENTER);
         itemPanel.add(createScorePanel(note.getScore()), BorderLayout.EAST);
         itemPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                new TastingNoteDetailPage(note, TastingNotePage.this);
+                new TastingNoteDetailPage(note, noteIndex, TastingNotePage.this);
                 setVisible(false);
             }
         });
 
         return itemPanel;
     }
-
     private JPanel createScorePanel(int score) {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
@@ -172,13 +221,13 @@ public class TastingNotePage extends JFrame {
                 star.setIcon(filled ? scoreOnIcon : scoreOffIcon);
             } else {
                 star.setText(filled ? "\u2605" : "\u2606");
-                star.setFont(new Font("SansSerif", Font.BOLD, 16));
-                star.setForeground(filled ? new Color(242, 196, 74) : Color.WHITE);
+                star.setFont(ThemeFonts.bold(16));
+                star.setForeground(filled ? ThemeColors.ACCENT_STAR : ThemeColors.TEXT_WHITE);
             }
 
             panel.add(star);
             if (i < STAR_COUNT - 1) {
-                panel.add(Box.createRigidArea(new Dimension(2, 0)));
+                panel.add(Box.createRigidArea(ScreenScale.dimension(2, 0)));
             }
         }
 

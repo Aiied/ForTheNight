@@ -1,4 +1,3 @@
-# Search filter option source
 country=Ireland,Japan,Scotland,USA
 type=Blended,Blended Malt,Bourbon,Independent Bottling,Single Malt,Tennessee
 aroma=Apple,Caramel,Chocolate,Citrus,Floral,Honey,Leather,Lemon,Mizunara,Orange,Peat,Pepper,Pineapple,Raisin,Sea Breeze,Smoky,Spice,Vanilla,Woody

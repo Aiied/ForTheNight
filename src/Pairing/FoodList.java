@@ -1,6 +1,6 @@
 package Pairing;
 
-import Ui.BaseList;
+import Ui.util.BaseList;
 
 import java.util.List;
 

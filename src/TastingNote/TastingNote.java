@@ -10,6 +10,7 @@ public class TastingNote {
     ArrayList<String> finish;
     int score;
     String detailReview;
+    String imagePath;
 
     public TastingNote(
             String whiskyName,
@@ -18,7 +19,8 @@ public class TastingNote {
             ArrayList<String> taste,
             ArrayList<String> finish,
             int score,
-            String detailReview
+            String detailReview,
+            String imagePath
     ) {
         this.whiskyName = whiskyName;
         this.date = date;
@@ -27,6 +29,7 @@ public class TastingNote {
         this.finish = finish;
         this.score = score;
         this.detailReview = detailReview;
+        this.imagePath = imagePath;
     }
 
     public String getWhiskyName() {
@@ -55,5 +58,40 @@ public class TastingNote {
 
     public String getDetailReview() {
         return detailReview;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public String toStorageLine() {
+        return String.join(
+                "|",
+                safe(whiskyName),
+                safe(date),
+                joinNotes(aroma),
+                joinNotes(taste),
+                joinNotes(finish),
+                Integer.toString(score),
+                safe(detailReview),
+                safe(imagePath)
+        );
+    }
+
+    private String joinNotes(ArrayList<String> notes) {
+        ArrayList<String> filtered = new ArrayList<>();
+        for (String note : notes) {
+            if (note != null && !note.isBlank()) {
+                filtered.add(note.trim());
+            }
+        }
+        return String.join(", ", filtered);
+    }
+
+    private String safe(String text) {
+        if (text == null) {
+            return "";
+        }
+        return text.replace("\r", " ").replace("\n", " ").trim();
     }
 }

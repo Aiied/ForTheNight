@@ -1,24 +1,23 @@
-import InitialSetup.TastePreferencePage;
+import InitialSetup.taste.TastePreferencePage;
 import Pairing.PairingPage;
 import Search.SearchPage;
 import TastingNote.TastingNotePage;
-import Ui.BackgroundPanel;
-import Ui.ImageScaler;
-import Ui.ScreenScale;
-import Ui.Button.PairingButton;
-import Ui.Button.SearchButton;
-import Ui.Button.TastingNoteButton;
-import Ui.Button.TasteTestButton;
+import Ui.buttons.PairingButton;
+import Ui.buttons.SearchButton;
+import Ui.buttons.TastingNoteButton;
+import Ui.buttons.TasteTestButton;
+import Ui.icon.ImageScaler;
+import Ui.panel.BackgroundPanel;
+import Ui.theme.ScreenScale;
+import Ui.theme.ThemeColors;
+import Ui.theme.ThemeFonts;
+import Ui.theme.ThemeSizes;
+import Ui.util.AppPaths;
 
 import javax.swing.*;
 import java.awt.BorderLayout;
-import java.awt.Color;
 
 public class MainPage extends JFrame {
-    private static final String LOGO_PATH = "src/assets/image/Ui/LOGO.png";
-    private static final int LOGO_WIDTH = 640;
-    private static final int LOGO_HEIGHT = 280;
-
     public MainPage() {
         setTitle("Main");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -90,18 +89,18 @@ public class MainPage extends JFrame {
 
         JLabel logoLabel = new JLabel();
         logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        logoLabel.setPreferredSize(ScreenScale.dimension(LOGO_WIDTH, LOGO_HEIGHT));
+        logoLabel.setPreferredSize(ThemeSizes.scaledMainLogo());
         logoLabel.setOpaque(false);
 
-        int logoWidth = ScreenScale.scale(LOGO_WIDTH);
-        int logoHeight = ScreenScale.scale(LOGO_HEIGHT);
-        ImageIcon logoIcon = ImageScaler.loadScaledIcon(LOGO_PATH, logoWidth, logoHeight);
+        int logoWidth = ScreenScale.scale(ThemeSizes.MAIN_LOGO_WIDTH);
+        int logoHeight = ScreenScale.scale(ThemeSizes.MAIN_LOGO_HEIGHT);
+        ImageIcon logoIcon = ImageScaler.loadScaledIcon(AppPaths.LOGO_IMAGE, logoWidth, logoHeight);
         if (logoIcon != null) {
             logoLabel.setIcon(logoIcon);
         } else {
             logoLabel.setText("For The Night");
-            logoLabel.setForeground(Color.WHITE);
-            logoLabel.setFont(new java.awt.Font("SansSerif", java.awt.Font.BOLD, ScreenScale.scale(36)));
+            logoLabel.setForeground(ThemeColors.TEXT_WHITE);
+            logoLabel.setFont(ThemeFonts.bold(36));
         }
 
         logoPanel.add(logoLabel, BorderLayout.CENTER);

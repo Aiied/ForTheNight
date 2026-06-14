@@ -1,7 +1,10 @@
 package Pairing;
 
-import Ui.BackgroundPanel;
-import Ui.Button.BackButton;
+import Ui.buttons.BackButton;
+import Ui.panel.BackgroundPanel;
+import Ui.theme.ScreenScale;
+import Ui.theme.ThemeColors;
+import Ui.theme.ThemeFonts;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -32,10 +35,14 @@ public class RecipePage extends JFrame {
 
         JPanel contentPanel = new BackgroundPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
-        contentPanel.setBorder(BorderFactory.createEmptyBorder(18, 18, 18, 18));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(
+                ScreenScale.scale(18),
+                ScreenScale.scale(18),
+                ScreenScale.scale(18),
+                ScreenScale.scale(18)
+        ));
 
         JButton backButton = new BackButton();
-        backButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         backButton.addActionListener(e -> {
             previousPage.setVisible(true);
             dispose();
@@ -43,46 +50,51 @@ public class RecipePage extends JFrame {
 
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setOpaque(false);
-        topPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 52));
+        topPanel.setMaximumSize(ScreenScale.dimension(Integer.MAX_VALUE, 52));
         topPanel.add(backButton, BorderLayout.WEST);
 
         JLabel recipeLabel = new JLabel(food.getRecipe());
-        recipeLabel.setForeground(Color.WHITE);
-        recipeLabel.setFont(new Font("SansSerif", Font.BOLD, 30));
+        recipeLabel.setForeground(ThemeColors.TEXT_WHITE);
+        recipeLabel.setFont(ThemeFonts.bold(30));
         recipeLabel.setAlignmentX(CENTER_ALIGNMENT);
 
         JLabel whiskyLabel = new JLabel(food.getWhiskyName());
-        whiskyLabel.setForeground(new Color(219, 193, 131));
-        whiskyLabel.setFont(new Font("SansSerif", Font.BOLD, 20));
+        whiskyLabel.setForeground(ThemeColors.ACCENT_GOLD_BRIGHT);
+        whiskyLabel.setFont(ThemeFonts.bold(20));
         whiskyLabel.setAlignmentX(CENTER_ALIGNMENT);
 
         JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
-        infoPanel.setBackground(new Color(24, 24, 24));
-        infoPanel.setBorder(BorderFactory.createEmptyBorder(18, 18, 18, 18));
+        infoPanel.setBackground(ThemeColors.SURFACE_CARD);
+        infoPanel.setBorder(BorderFactory.createEmptyBorder(
+                ScreenScale.scale(18),
+                ScreenScale.scale(18),
+                ScreenScale.scale(18),
+                ScreenScale.scale(18)
+        ));
         infoPanel.setAlignmentX(CENTER_ALIGNMENT);
-        infoPanel.setMaximumSize(new Dimension(760, 420));
+        infoPanel.setMaximumSize(ScreenScale.dimension(760, 420));
 
         infoPanel.add(createBodyLabel("Recommended Pairing: " + food.getName()));
-        infoPanel.add(Box.createRigidArea(new Dimension(0, 14)));
+        infoPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 14)));
         infoPanel.add(createBodyLabel("Whisky: " + food.getWhiskyName()));
-        infoPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        infoPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 10)));
         infoPanel.add(createBodyLabel("Recipe: " + safeValue(food.getRecipe())));
-        infoPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        infoPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 10)));
         infoPanel.add(createBodyLabel("Liqueur: " + safeValue(food.getLiqueur())));
-        infoPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        infoPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 10)));
         infoPanel.add(createBodyLabel("Mixer: " + safeValue(food.getDrink())));
-        infoPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        infoPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 10)));
         infoPanel.add(createBodyLabel("Garnish: " + safeValue(food.getGarnish())));
-        infoPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        infoPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 10)));
         infoPanel.add(createBodyLabel("Additional Ingredients: " + safeValue(food.getExtraIngredient())));
 
         contentPanel.add(topPanel);
-        contentPanel.add(Box.createRigidArea(new Dimension(0, 18)));
+        contentPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 18)));
         contentPanel.add(recipeLabel);
-        contentPanel.add(Box.createRigidArea(new Dimension(0, 8)));
+        contentPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 8)));
         contentPanel.add(whiskyLabel);
-        contentPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        contentPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 20)));
         contentPanel.add(infoPanel);
 
         JScrollPane scrollPane = new JScrollPane(contentPanel);
@@ -96,8 +108,8 @@ public class RecipePage extends JFrame {
 
     private JLabel createBodyLabel(String text) {
         JLabel label = new JLabel(text);
-        label.setForeground(Color.WHITE);
-        label.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        label.setForeground(ThemeColors.TEXT_WHITE);
+        label.setFont(ThemeFonts.plain(16));
         label.setAlignmentX(LEFT_ALIGNMENT);
         return label;
     }

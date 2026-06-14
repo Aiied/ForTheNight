@@ -1,6 +1,6 @@
 package Whisky;
 
-import Ui.BaseList;
+import Ui.util.BaseList;
 
 import java.util.ArrayList;
 import java.util.List;

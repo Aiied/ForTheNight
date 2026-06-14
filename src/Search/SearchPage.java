@@ -1,41 +1,42 @@
 package Search;
 
-import Ui.Button.BackButton;
-import Ui.BaseList;
-import Ui.BaseSearchField;
-import Ui.BackgroundPanel;
-import Ui.Button.FavoriteStarButton;
-import Ui.ImageScaler;
-import Ui.StyledTabbedPane;
+import Ui.buttons.FavoriteStarButton;
+import Ui.buttons.AbstractActionButton;
+import Ui.component.AbstractSearchListPage;
+import Ui.component.FixedImageLabel;
+import Ui.panel.BackgroundPanel;
+import Ui.panel.WoodFilterPanel;
+import Ui.theme.ScreenScale;
+import Ui.theme.ThemeColors;
+import Ui.theme.ThemeFonts;
+import Ui.theme.ThemeSizes;
+import Ui.util.AppPaths;
+import Whisky.FavoriteWhiskyStore;
 import Whisky.Whisky;
 import Whisky.WhiskyDetailPage;
 import Whisky.WhiskyList;
+import Whisky.WhiskyRecommender;
 
 import javax.swing.*;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchPage extends JFrame {
-    private static final int ITEMS_PER_TAB = 5;
-    private static final int THUMB_WIDTH = 84;
-    private static final int THUMB_HEIGHT = 96;
+public class SearchPage extends AbstractSearchListPage<Whisky> {
+    private static ArrayList<Whisky> cachedWhiskies;
+    private static Filter cachedFilter;
 
-    private final JFrame previousPage;
     private final ArrayList<Whisky> allWhiskies;
     private final Filter filter;
-    private final JTabbedPane listTabs;
-    private final BaseSearchField nameField;
     private final JComboBox<String> countryBox;
     private final JComboBox<String> typeBox;
     private final JComboBox<String> aromaBox;
@@ -43,91 +44,88 @@ public class SearchPage extends JFrame {
     private final JComboBox<String> finishBox;
 
     public SearchPage(JFrame previousPage) {
-        this.previousPage = previousPage;
-        setTitle("Search");
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-        setLayout(new BorderLayout());
+        super("Search", previousPage, "search", ThemeSizes.SEARCH_FIELD_WIDTH, ThemeSizes.SEARCH_FIELD_HEIGHT);
 
-        WhiskyList whiskyList = new WhiskyList("src/assets/Flie(txt)/whiskyList.txt");
-        allWhiskies = new ArrayList<>(whiskyList.getWhiskies());
-        filter = new Filter(allWhiskies, "src/assets/Flie(txt)/filterOptions.txt");
+        allWhiskies = getCachedWhiskies();
+        filter = getCachedFilter(allWhiskies);
 
-        JButton backButton = new BackButton();
-        backButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        backButton.addActionListener(e -> {
-            if (this.previousPage != null) {
-                this.previousPage.setVisible(true);
+        countryBox = createOptionBox(filter.buildCountryOptions());
+        typeBox = createOptionBox(filter.buildTypeOptions());
+        aromaBox = createOptionBox(filter.buildAromaOptions());
+        tasteBox = createOptionBox(filter.buildTasteOptions());
+        finishBox = createOptionBox(filter.buildFinishOptions());
+        initializeSearchPage();
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowActivated(WindowEvent e) {
+                refreshFavoriteStars();
             }
-            dispose();
         });
+    }
 
-        JPanel topPanel = new BackgroundPanel(new BorderLayout());
-        topPanel.setBorder(BorderFactory.createEmptyBorder(12, 16, 0, 16));
-        topPanel.add(backButton, BorderLayout.WEST);
+    @Override
+    protected int getItemsPerTab() {
+        return ThemeSizes.LIST_ITEMS_PER_TAB;
+    }
 
-        JPanel filterPanel = new JPanel(new GridBagLayout());
-        filterPanel.setOpaque(true);
-        filterPanel.setBackground(new Color(18, 18, 18, 220));
-        filterPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-        filterPanel.setPreferredSize(new Dimension(440, 0));
+    @Override
+    protected String getEmptyMessage() {
+        return "No whisky data";
+    }
+
+    @Override
+    protected List<Whisky> filterItems() {
+        return applyFilters();
+    }
+
+    @Override
+    protected JPanel createItemPanel(Whisky whisky) {
+        return createWhiskyItem(whisky);
+    }
+
+    @Override
+    protected JComponent createEastPanel() {
+        JPanel filterPanel = new WoodFilterPanel(new GridBagLayout());
+        filterPanel.setBorder(BorderFactory.createEmptyBorder(
+                ScreenScale.scale(12),
+                ScreenScale.scale(12),
+                ScreenScale.scale(12),
+                ScreenScale.scale(12)
+        ));
+        filterPanel.setPreferredSize(ScreenScale.dimension(ThemeSizes.SEARCH_FILTER_PANEL_WIDTH, 0));
+
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(4, 0, 4, 0);
+        gbc.insets = new Insets(ScreenScale.scale(4), 0, ScreenScale.scale(4), 0);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 1.0;
         gbc.gridx = 0;
 
-        nameField = new BaseSearchField("search", 560, 32) { };
-        nameField.onChange(() -> refreshList(applyFilters()));
-
-        countryBox = createOptionBox(filter.buildCountryOptions());
         addFilterRow(filterPanel, gbc, "Country", countryBox);
-
-        typeBox = createOptionBox(filter.buildTypeOptions());
         addFilterRow(filterPanel, gbc, "Type", typeBox);
-
-        aromaBox = createOptionBox(filter.buildAromaOptions());
         addFilterRow(filterPanel, gbc, "Aroma", aromaBox);
-
-        tasteBox = createOptionBox(filter.buildTasteOptions());
         addFilterRow(filterPanel, gbc, "Taste", tasteBox);
-
-        finishBox = createOptionBox(filter.buildFinishOptions());
         addFilterRow(filterPanel, gbc, "Finish", finishBox);
 
-        JButton searchButton = new JButton("Search");
-        searchButton.setFocusPainted(false);
-        searchButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        searchButton.addActionListener(e -> refreshList(applyFilters()));
-
+        JButton searchButton = new AbstractActionButton("Search", ScreenScale.scale(13)) { };
+        WoodFilterPanel.styleActionButton(searchButton);
+        searchButton.addActionListener(e -> refreshList());
         gbc.gridy++;
         filterPanel.add(searchButton, gbc);
 
-        listTabs = new StyledTabbedPane();
-        refreshList(allWhiskies);
+        JButton recommendButton = new AbstractActionButton("Recommend", ScreenScale.scale(13)) { };
+        WoodFilterPanel.styleActionButton(recommendButton);
+        recommendButton.addActionListener(e -> showRecommendations());
+        gbc.gridy++;
+        filterPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 8)), gbc);
+        gbc.gridy++;
+        filterPanel.add(recommendButton, gbc);
 
-        JPanel centerPanel = new BackgroundPanel();
-        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-        centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        nameField.setAlignmentX(CENTER_ALIGNMENT);
-        centerPanel.add(nameField);
-        centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-
-        listTabs.setAlignmentX(CENTER_ALIGNMENT);
-        centerPanel.add(listTabs);
-
-        add(topPanel, BorderLayout.NORTH);
-        add(centerPanel, BorderLayout.CENTER);
-        add(filterPanel, BorderLayout.EAST);
-
-        setVisible(true);
+        return filterPanel;
     }
 
     private void addFilterRow(JPanel panel, GridBagConstraints gbc, String label, JComponent component) {
         JLabel title = new JLabel(label);
-        title.setForeground(Color.WHITE);
-        title.setFont(new Font("SansSerif", Font.BOLD, 12));
+        WoodFilterPanel.styleFilterLabel(title);
         gbc.gridy++;
         panel.add(title, gbc);
         gbc.gridy++;
@@ -136,7 +134,8 @@ public class SearchPage extends JFrame {
 
     private JComboBox<String> createOptionBox(List<String> options) {
         JComboBox<String> box = new JComboBox<>(options.toArray(new String[0]));
-        box.setFont(new Font("SansSerif", Font.PLAIN, 13));
+        box.setFont(ThemeFonts.plain(13));
+        WoodFilterPanel.styleComboBox(box);
         return box;
     }
 
@@ -151,68 +150,32 @@ public class SearchPage extends JFrame {
         );
     }
 
-    private void refreshList(List<Whisky> whiskies) {
-        listTabs.removeAll();
-        List<List<Whisky>> tabs = BaseList.partition(whiskies, ITEMS_PER_TAB);
-
-        if (tabs.isEmpty()) {
-            listTabs.addTab("1", createListScrollPane(createEmptyMessagePanel()));
-            listTabs.setEnabledAt(0, false);
-            return;
-        }
-
-        for (int i = 0; i < tabs.size(); i++) {
-            JPanel tabPanel = new BackgroundPanel();
-            tabPanel.setLayout(new BoxLayout(tabPanel, BoxLayout.Y_AXIS));
-            tabPanel.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
-
-            for (Whisky whisky : tabs.get(i)) {
-                tabPanel.add(createWhiskyItem(whisky));
-                tabPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-            }
-
-            listTabs.addTab(String.valueOf(i + 1), createListScrollPane(tabPanel));
-        }
-    }
-
-    private JScrollPane createListScrollPane(JPanel panel) {
-        JScrollPane scrollPane = new JScrollPane(panel);
-        scrollPane.setOpaque(false);
-        scrollPane.getViewport().setOpaque(false);
-        scrollPane.setBorder(null);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-        return scrollPane;
-    }
-
-    private JPanel createEmptyMessagePanel() {
-        JPanel panel = new BackgroundPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-        JLabel emptyLabel = new JLabel("No whisky data");
-        emptyLabel.setForeground(java.awt.Color.WHITE);
-        emptyLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
-        emptyLabel.setAlignmentX(CENTER_ALIGNMENT);
-        emptyLabel.setBorder(BorderFactory.createEmptyBorder(40, 0, 0, 0));
-
-        panel.add(Box.createVerticalGlue());
-        panel.add(emptyLabel);
-        panel.add(Box.createVerticalGlue());
-        return panel;
-    }
-
     private JPanel createWhiskyItem(Whisky whisky) {
         JPanel itemPanel = new JPanel(new BorderLayout(16, 0));
-        itemPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 116));
-        itemPanel.setPreferredSize(new Dimension(360, 116));
+        itemPanel.setMaximumSize(ScreenScale.dimension(Integer.MAX_VALUE, 116));
+        itemPanel.setPreferredSize(ScreenScale.dimension(
+                ThemeSizes.SEARCH_RESULT_ITEM_WIDTH,
+                ThemeSizes.SEARCH_RESULT_ITEM_HEIGHT
+        ));
         itemPanel.setBackground(new java.awt.Color(24, 24, 24));
-        itemPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 14));
+        itemPanel.setBorder(BorderFactory.createEmptyBorder(
+                ScreenScale.scale(10),
+                ScreenScale.scale(10),
+                ScreenScale.scale(10),
+                ScreenScale.scale(14)
+        ));
         itemPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        JLabel imageLabel = createImageLabel(whisky);
+        JLabel imageLabel = new FixedImageLabel(
+                whisky.getImagePath(),
+                ThemeSizes.WHISKY_THUMB_WIDTH,
+                ThemeSizes.WHISKY_THUMB_HEIGHT,
+                ThemeSizes.scaledWhiskyThumb()
+        );
         JLabel nameLabel = new JLabel(whisky.getName());
-        nameLabel.setForeground(java.awt.Color.WHITE);
-        nameLabel.setFont(new Font("SansSerif", Font.BOLD, 17));
-        FavoriteStarButton starButton = new FavoriteStarButton(whisky.getName(), 28);
+        nameLabel.setForeground(ThemeColors.TEXT_WHITE);
+        nameLabel.setFont(ThemeFonts.bold(17));
+        FavoriteStarButton starButton = new FavoriteStarButton(whisky.getName(), ScreenScale.scale(28));
 
         itemPanel.add(imageLabel, BorderLayout.WEST);
         itemPanel.add(nameLabel, BorderLayout.CENTER);
@@ -227,31 +190,61 @@ public class SearchPage extends JFrame {
 
         return itemPanel;
     }
+    private void refreshFavoriteStars() {
+        refreshFavoriteStars(listTabs);
+    }
 
-    private JLabel createImageLabel(Whisky whisky) {
-        JLabel imageLabel = new JLabel();
-        imageLabel.setPreferredSize(new Dimension(THUMB_WIDTH, THUMB_HEIGHT));
-        imageLabel.setOpaque(true);
-        imageLabel.setBackground(new java.awt.Color(45, 45, 45));
-        imageLabel.setHorizontalAlignment(JLabel.CENTER);
-        imageLabel.setVerticalAlignment(JLabel.CENTER);
+    private void refreshFavoriteStars(java.awt.Container container) {
+        for (java.awt.Component component : container.getComponents()) {
+            if (component instanceof FavoriteStarButton favoriteStarButton) {
+                favoriteStarButton.refreshFavoriteState();
+                continue;
+            }
 
-        if (whisky.getImagePath() == null || whisky.getImagePath().isBlank()) {
-            return imageLabel;
+            if (component instanceof java.awt.Container childContainer) {
+                refreshFavoriteStars(childContainer);
+            }
+        }
+    }
+
+    private void showRecommendations() {
+        List<Whisky> recommendations = WhiskyRecommender.recommend(
+                allWhiskies,
+                FavoriteWhiskyStore.getFavorites()
+        );
+
+        if (recommendations.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Not enough matching whiskies were found from your favorite whisky data.",
+                    "Recommendation",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+            return;
         }
 
-        String resolvedPath = whisky.getImagePath();
-        File imageFile = new File(resolvedPath);
-        if (!imageFile.exists()) {
-            return imageLabel;
-        }
+        nameField.setText("");
+        countryBox.setSelectedIndex(0);
+        typeBox.setSelectedIndex(0);
+        aromaBox.setSelectedIndex(0);
+        tasteBox.setSelectedIndex(0);
+        finishBox.setSelectedIndex(0);
+        refreshList(recommendations);
+    }
 
-        ImageIcon icon = ImageScaler.loadScaledIcon(resolvedPath, THUMB_WIDTH, THUMB_HEIGHT);
-        if (icon != null) {
-            imageLabel.setIcon(icon);
+    private static synchronized ArrayList<Whisky> getCachedWhiskies() {
+        if (cachedWhiskies == null) {
+            WhiskyList whiskyList = new WhiskyList(AppPaths.WHISKY_LIST_FILE);
+            cachedWhiskies = new ArrayList<>(whiskyList.getWhiskies());
         }
+        return new ArrayList<>(cachedWhiskies);
+    }
 
-        return imageLabel;
+    private static synchronized Filter getCachedFilter(List<Whisky> whiskies) {
+        if (cachedFilter == null) {
+            cachedFilter = new Filter(whiskies, AppPaths.FILTER_OPTIONS_FILE);
+        }
+        return cachedFilter;
     }
 }
 

@@ -1,5 +1,7 @@
 package Whisky;
 
+import Ui.util.AppPaths;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -11,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 public final class FavoriteWhiskyStore {
-    private static final String FAVORITE_FILE_PATH = "src/assets/Flie(txt)/favoriteWhiskies.txt";
+    private static LinkedHashSet<String> cachedFavorites;
 
     private FavoriteWhiskyStore() {
     }
@@ -36,9 +38,17 @@ public final class FavoriteWhiskyStore {
         return nowFavorite;
     }
 
+    public static synchronized LinkedHashSet<String> getFavorites() {
+        return new LinkedHashSet<>(loadFavorites());
+    }
+
     private static LinkedHashSet<String> loadFavorites() {
+        if (cachedFavorites != null) {
+            return new LinkedHashSet<>(cachedFavorites);
+        }
+
         LinkedHashSet<String> favorites = new LinkedHashSet<>();
-        Path path = Path.of(FAVORITE_FILE_PATH);
+        Path path = Path.of(AppPaths.FAVORITE_WHISKIES_FILE);
 
         if (!Files.exists(path)) {
             return favorites;
@@ -56,11 +66,12 @@ public final class FavoriteWhiskyStore {
             e.printStackTrace();
         }
 
+        cachedFavorites = new LinkedHashSet<>(favorites);
         return favorites;
     }
 
     private static void saveFavorites(Set<String> favorites) {
-        File file = new File(FAVORITE_FILE_PATH);
+        File file = new File(AppPaths.FAVORITE_WHISKIES_FILE);
         File parent = file.getParentFile();
         if (parent != null && !parent.exists()) {
             parent.mkdirs();
@@ -71,6 +82,7 @@ public final class FavoriteWhiskyStore {
                 writer.write(favorite);
                 writer.newLine();
             }
+            cachedFavorites = new LinkedHashSet<>(favorites);
         } catch (IOException e) {
             e.printStackTrace();
         }

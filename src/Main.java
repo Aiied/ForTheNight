@@ -1,14 +1,13 @@
-import InitialSetup.FavoriteWhiskyPage;
+import InitialSetup.favorite.FavoriteWhiskyPage;
+import Ui.util.AppPaths;
 
 import javax.swing.*;
 import java.io.File;
 
-public class  Main {
-    private static final String FAVORITE_FILE_PATH = "src/assets/Flie(txt)/favoriteWhiskies.txt";
-
+public class    Main {
     public static void main(String[] args){
         SwingUtilities.invokeLater(() -> {
-            File favoriteFile = new File(FAVORITE_FILE_PATH);
+            File favoriteFile = new File(AppPaths.FAVORITE_WHISKIES_FILE);
             if (!favoriteFile.exists()) {
                 new FavoriteWhiskyPage();
                 return;

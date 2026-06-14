@@ -1,8 +1,14 @@
 package TastingNote;
 
-import Ui.BackgroundPanel;
-import Ui.Button.BackButton;
-import Ui.StarIconFactory;
+import Ui.buttons.BackButton;
+import Ui.buttons.AbstractActionButton;
+import Ui.component.FixedImageLabel;
+import Ui.icon.StarIconFactory;
+import Ui.panel.BackgroundPanel;
+import Ui.theme.ScreenScale;
+import Ui.theme.ThemeColors;
+import Ui.theme.ThemeFonts;
+import Ui.theme.ThemeSizes;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -14,22 +20,21 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.util.ArrayList;
 
 public class TastingNoteDetailPage extends JFrame {
     private static final int STAR_COUNT = 5;
-
     private final TastingNote note;
+    private final int noteIndex;
     private final JFrame previousPage;
-    private final ImageIcon scoreOnIcon = StarIconFactory.createStarIcon(22, 1.0f);
-    private final ImageIcon scoreOffIcon = StarIconFactory.createStarIcon(22, 1.0f, Color.WHITE);
+    private final ImageIcon scoreOnIcon = StarIconFactory.createStarIcon(ScreenScale.scale(22), 1.0f);
+    private final ImageIcon scoreOffIcon = StarIconFactory.createStarIcon(ScreenScale.scale(22), 1.0f, ThemeColors.TEXT_WHITE);
 
-    public TastingNoteDetailPage(TastingNote note, JFrame previousPage) {
+    public TastingNoteDetailPage(TastingNote note, int noteIndex, JFrame previousPage) {
         this.note = note;
+        this.noteIndex = noteIndex;
         this.previousPage = previousPage;
 
         setTitle(note.getWhiskyName());
@@ -39,10 +44,14 @@ public class TastingNoteDetailPage extends JFrame {
 
         JPanel contentPanel = new BackgroundPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
-        contentPanel.setBorder(BorderFactory.createEmptyBorder(18, 18, 18, 18));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(
+                ScreenScale.scale(18),
+                ScreenScale.scale(18),
+                ScreenScale.scale(18),
+                ScreenScale.scale(18)
+        ));
 
         JButton backButton = new BackButton();
-        backButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         backButton.addActionListener(e -> {
             previousPage.setVisible(true);
             dispose();
@@ -50,30 +59,50 @@ public class TastingNoteDetailPage extends JFrame {
 
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setOpaque(false);
-        topPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 52));
+        topPanel.setMaximumSize(ScreenScale.dimension(Integer.MAX_VALUE, 52));
         topPanel.add(backButton, BorderLayout.WEST);
 
+        JButton editButton = new AbstractActionButton("Edit", ScreenScale.scale(14)) { };
+        editButton.addActionListener(e -> {
+            new NewNotePage(previousPage, note, noteIndex);
+            dispose();
+        });
+        topPanel.add(editButton, BorderLayout.EAST);
+
         JLabel nameLabel = new JLabel(note.getWhiskyName());
-        nameLabel.setForeground(Color.WHITE);
-        nameLabel.setFont(new Font("SansSerif", Font.BOLD, 26));
+        nameLabel.setForeground(ThemeColors.TEXT_WHITE);
+        nameLabel.setFont(ThemeFonts.bold(26));
         nameLabel.setAlignmentX(CENTER_ALIGNMENT);
 
         JLabel dateLabel = new JLabel(note.getDate());
-        dateLabel.setForeground(new Color(170, 170, 170));
-        dateLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        dateLabel.setForeground(ThemeColors.TEXT_SECONDARY);
+        dateLabel.setFont(ThemeFonts.plain(14));
         dateLabel.setAlignmentX(CENTER_ALIGNMENT);
 
         JPanel scorePanel = createScorePanel(note.getScore());
         scorePanel.setAlignmentX(CENTER_ALIGNMENT);
 
+        JLabel imageLabel = new FixedImageLabel(
+                note.getImagePath(),
+                ThemeSizes.TASTING_NOTE_DETAIL_IMAGE_WIDTH,
+                ThemeSizes.TASTING_NOTE_DETAIL_IMAGE_HEIGHT,
+                ThemeSizes.scaledTastingNoteDetailImage(),
+                true
+        );
+        imageLabel.setAlignmentX(CENTER_ALIGNMENT);
+
         contentPanel.add(topPanel);
-        contentPanel.add(Box.createRigidArea(new Dimension(0, 18)));
+        contentPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 18)));
         contentPanel.add(nameLabel);
-        contentPanel.add(Box.createRigidArea(new Dimension(0, 6)));
+        contentPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 6)));
         contentPanel.add(dateLabel);
-        contentPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        contentPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 10)));
         contentPanel.add(scorePanel);
-        contentPanel.add(Box.createRigidArea(new Dimension(0, 18)));
+        if (hasImage()) {
+            contentPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 18)));
+            contentPanel.add(imageLabel);
+        }
+        contentPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 18)));
         contentPanel.add(createInfoPanel());
 
         JScrollPane scrollPane = new JScrollPane(contentPanel);
@@ -88,10 +117,15 @@ public class TastingNoteDetailPage extends JFrame {
     private JPanel createInfoPanel() {
         JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
-        infoPanel.setBackground(new Color(24, 24, 24));
-        infoPanel.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
+        infoPanel.setBackground(ThemeColors.SURFACE_CARD);
+        infoPanel.setBorder(BorderFactory.createEmptyBorder(
+                ScreenScale.scale(16),
+                ScreenScale.scale(16),
+                ScreenScale.scale(16),
+                ScreenScale.scale(16)
+        ));
         infoPanel.setAlignmentX(CENTER_ALIGNMENT);
-        infoPanel.setMaximumSize(new Dimension(760, 460));
+        infoPanel.setMaximumSize(ScreenScale.dimension(760, 460));
 
         infoPanel.add(createInfoRow("Aroma", joinNotes(note.getAroma())));
         infoPanel.add(createInfoRow("Taste", joinNotes(note.getTaste())));
@@ -102,25 +136,24 @@ public class TastingNoteDetailPage extends JFrame {
     }
 
     private JPanel createInfoRow(String title, String value) {
-        JPanel rowPanel = new JPanel(new BorderLayout(12, 0));
+        JPanel rowPanel = new JPanel(new BorderLayout(ScreenScale.scale(12), 0));
         rowPanel.setOpaque(false);
-        rowPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 52));
-        rowPanel.setBorder(BorderFactory.createEmptyBorder(4, 0, 4, 0));
+        rowPanel.setMaximumSize(ScreenScale.dimension(Integer.MAX_VALUE, 52));
+        rowPanel.setBorder(BorderFactory.createEmptyBorder(ScreenScale.scale(4), 0, ScreenScale.scale(4), 0));
 
         JLabel titleLabel = new JLabel(title);
-        titleLabel.setPreferredSize(new Dimension(82, 26));
-        titleLabel.setForeground(new Color(170, 170, 170));
-        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 13));
+        titleLabel.setPreferredSize(ScreenScale.dimension(82, 26));
+        titleLabel.setForeground(ThemeColors.TEXT_SECONDARY);
+        titleLabel.setFont(ThemeFonts.bold(13));
 
         JLabel valueLabel = new JLabel(isBlank(value) ? "-" : value);
-        valueLabel.setForeground(Color.WHITE);
-        valueLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        valueLabel.setForeground(ThemeColors.TEXT_WHITE);
+        valueLabel.setFont(ThemeFonts.plain(14));
 
         rowPanel.add(titleLabel, BorderLayout.WEST);
         rowPanel.add(valueLabel, BorderLayout.CENTER);
         return rowPanel;
     }
-
     private JPanel createScorePanel(int score) {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
@@ -135,13 +168,13 @@ public class TastingNoteDetailPage extends JFrame {
                 star.setIcon(filled ? scoreOnIcon : scoreOffIcon);
             } else {
                 star.setText(filled ? "\u2605" : "\u2606");
-                star.setFont(new Font("SansSerif", Font.BOLD, 20));
-                star.setForeground(filled ? new Color(242, 196, 74) : Color.WHITE);
+                star.setFont(ThemeFonts.bold(20));
+                star.setForeground(filled ? ThemeColors.ACCENT_STAR : ThemeColors.TEXT_WHITE);
             }
 
             panel.add(star);
             if (i < STAR_COUNT - 1) {
-                panel.add(Box.createRigidArea(new Dimension(3, 0)));
+                panel.add(Box.createRigidArea(ScreenScale.dimension(3, 0)));
             }
         }
         return panel;
@@ -162,6 +195,10 @@ public class TastingNoteDetailPage extends JFrame {
             return "";
         }
         return text.trim();
+    }
+
+    private boolean hasImage() {
+        return note.getImagePath() != null && !note.getImagePath().isBlank();
     }
 
     private boolean isBlank(String text) {
