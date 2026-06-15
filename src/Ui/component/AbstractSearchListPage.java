@@ -6,6 +6,7 @@ import Ui.theme.ScreenScale;
 import Ui.theme.ThemeColors;
 import Ui.theme.ThemeFonts;
 import Ui.theme.ThemeSizes;
+import Ui.theme.ThemeSpacing;
 import Ui.util.BaseList;
 
 import javax.swing.BorderFactory;
@@ -55,18 +56,14 @@ public abstract class AbstractSearchListPage<T> extends JFrame {
     protected final void initializeSearchPage() {
         JPanel topPanel = new BackgroundPanel(new BorderLayout());
         topPanel.setBorder(BorderFactory.createEmptyBorder(
-                ScreenScale.scale(12),
-                ScreenScale.scale(16),
+                ThemeSpacing.scale(ThemeSpacing.SPACE_12),
+                ThemeSpacing.scale(ThemeSpacing.PAGE_MARGIN),
                 0,
-                ScreenScale.scale(16)
+                ThemeSpacing.scale(ThemeSpacing.PAGE_MARGIN)
         ));
 
         if (previousPage != null) {
-            BackButton backButton = new BackButton();
-            backButton.addActionListener(e -> {
-                previousPage.setVisible(true);
-                dispose();
-            });
+            BackButton backButton = new BackButton(this, previousPage);
             topPanel.add(backButton, BorderLayout.WEST);
         }
 
@@ -79,9 +76,9 @@ public abstract class AbstractSearchListPage<T> extends JFrame {
 
         JPanel centerPanel = new BackgroundPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-        centerPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 10)));
+        centerPanel.add(ThemeSpacing.verticalGap(ThemeSpacing.SPACE_10));
         centerPanel.add(createSearchRow());
-        centerPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 10)));
+        centerPanel.add(ThemeSpacing.verticalGap(ThemeSpacing.SPACE_10));
 
         listTabs.setAlignmentX(CENTER_ALIGNMENT);
         if (getTabbedPanePreferredWidth() > 0 || getTabbedPanePreferredHeight() > 0) {
@@ -165,7 +162,7 @@ public abstract class AbstractSearchListPage<T> extends JFrame {
         JPanel tabPanel = createTabPanel();
         for (Object rawItem : rawList) {
             tabPanel.add(createItemPanel((T) rawItem));
-            tabPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 10)));
+            tabPanel.add(ThemeSpacing.verticalGap(ThemeSpacing.SPACE_10));
         }
 
         scrollPane.setViewportView(tabPanel);
@@ -176,10 +173,10 @@ public abstract class AbstractSearchListPage<T> extends JFrame {
         JPanel tabPanel = new BackgroundPanel();
         tabPanel.setLayout(new BoxLayout(tabPanel, BoxLayout.Y_AXIS));
         tabPanel.setBorder(BorderFactory.createEmptyBorder(
-                ScreenScale.scale(16),
-                ScreenScale.scale(16),
-                ScreenScale.scale(16),
-                ScreenScale.scale(16)
+                ThemeSpacing.scale(ThemeSpacing.PAGE_MARGIN),
+                ThemeSpacing.scale(ThemeSpacing.PAGE_MARGIN),
+                ThemeSpacing.scale(ThemeSpacing.PAGE_MARGIN),
+                ThemeSpacing.scale(ThemeSpacing.PAGE_MARGIN)
         ));
         return tabPanel;
     }
@@ -201,7 +198,7 @@ public abstract class AbstractSearchListPage<T> extends JFrame {
         emptyLabel.setForeground(ThemeColors.TEXT_WHITE);
         emptyLabel.setFont(ThemeFonts.bold(16));
         emptyLabel.setAlignmentX(CENTER_ALIGNMENT);
-        emptyLabel.setBorder(BorderFactory.createEmptyBorder(ScreenScale.scale(40), 0, 0, 0));
+        emptyLabel.setBorder(BorderFactory.createEmptyBorder(ThemeSpacing.scale(40), 0, 0, 0));
 
         panel.add(Box.createVerticalGlue());
         panel.add(emptyLabel);

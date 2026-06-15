@@ -1,5 +1,5 @@
-Lagavulin 8 Years Old|Scotland|Single Malt|Lagavulin Distillery|Bourbon, Sherry|48|Sea Breeze, Smoky|Peat||
-Singleton Dufftown 12 Years Old|Scotland|Single Malt|Dufftown Distillery|Bourbon, Sherry|40|Honey, Apple|Coffee|Nuts|
+Lagavulin 8 Years Old|Scotland|Single Malt|Lagavulin Distillery|Bourbon, Sherry|48|Sea Breeze, Smoky|Peat||src/assets/image/Whisky/Lagavulin8YearsOld.png
+Singleton Dufftown 12 Years Old|Scotland|Single Malt|Dufftown Distillery|Bourbon, Sherry|40|Honey, Apple|Coffee|Nuts|src/assets/image/Whisky/SingletonDufftown12YearsOld.png
 Jameson Standard|Ireland|Blended|||40|Floral, Vanilla|Nuts, Sherry|Subtle|src/assets/image/Whisky/JamesonStandard.jpg
 Black Bottle|Scotland|Blended|||40|Spice, Smoky|Smoky, Honey|Nutmeg|src/assets/image/Whisky/BlackBottle.png
 Johnnie Walker Black|Scotland|Blended|||40|Citrus|Vanilla, Dried Fruit|Smoky|src/assets/image/Whisky/JohnnieWalkerBlack.jpg

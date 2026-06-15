@@ -5,11 +5,9 @@ import Ui.theme.ThemeFonts;
 import Ui.theme.ThemeSizes;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -19,10 +17,6 @@ import java.awt.event.MouseEvent;
 
 public class BackButton extends JButton {
     private static final int ARC = 18;
-    private static final Color NORMAL_BACKGROUND = new Color(22, 22, 22);
-    private static final Color HOVER_BACKGROUND = new Color(38, 30, 22);
-    private static final Color BORDER = ThemeColors.BORDER_ACCENT;
-    private static final Color TEXT = ThemeColors.TEXT_PRIMARY;
 
     private boolean hovered;
 
@@ -53,6 +47,20 @@ public class BackButton extends JButton {
         });
     }
 
+    public BackButton(JFrame currentPage, JFrame previousPage) {
+        this();
+
+        setEnabled(previousPage != null);
+        addActionListener(e -> {
+            if (previousPage != null) {
+                previousPage.setVisible(true);
+            }
+            if (currentPage != null) {
+                currentPage.dispose();
+            }
+        });
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g.create();
@@ -60,10 +68,10 @@ public class BackButton extends JButton {
 
         int width = getWidth();
         int height = getHeight();
-        g2.setColor(hovered ? HOVER_BACKGROUND : NORMAL_BACKGROUND);
+        g2.setColor(hovered ? ThemeColors.SURFACE_BUTTON_HOVER : ThemeColors.SURFACE_BUTTON);
         g2.fillRoundRect(1, 1, width - 2, height - 2, ARC, ARC);
 
-        g2.setColor(BORDER);
+        g2.setColor(ThemeColors.BORDER_ACCENT);
         g2.setStroke(new BasicStroke(1.4f));
         g2.drawRoundRect(1, 1, width - 3, height - 3, ARC, ARC);
 
@@ -74,7 +82,7 @@ public class BackButton extends JButton {
     }
 
     private void paintArrow(Graphics2D g2, int x, int y) {
-        g2.setColor(TEXT);
+        g2.setColor(ThemeColors.TEXT_PRIMARY);
         g2.setStroke(new BasicStroke(2.2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g2.drawLine(x + 8, y - 7, x, y);
         g2.drawLine(x, y, x + 8, y + 7);
@@ -87,7 +95,7 @@ public class BackButton extends JButton {
         int x = width - textWidth - 16;
         int y = (height - metrics.getHeight()) / 2 + metrics.getAscent();
 
-        g2.setColor(TEXT);
+        g2.setColor(ThemeColors.TEXT_PRIMARY);
         g2.setFont(getFont());
         g2.drawString(getText(), x, y);
     }

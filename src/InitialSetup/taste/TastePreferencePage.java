@@ -6,6 +6,7 @@ import Ui.panel.BackgroundPanel;
 import Ui.theme.ScreenScale;
 import Ui.theme.ThemeColors;
 import Ui.theme.ThemeFonts;
+import Ui.theme.ThemeSizes;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -26,7 +27,6 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -38,12 +38,11 @@ import java.util.List;
 import java.util.Map;
 
 public class TastePreferencePage extends JFrame {
-    private static final Color CARD_BACKGROUND = new Color(16, 16, 16, 220);
+    private static final Color CARD_BACKGROUND = ThemeColors.SURFACE_PANEL;
+    private static final Color QUESTION_CARD_BACKGROUND = ThemeColors.SURFACE_CARD;
     private static final Color TEXT_PRIMARY = ThemeColors.TEXT_PRIMARY;
     private static final Color TEXT_SECONDARY = new Color(205, 190, 168);
     private static final Color ACCENT = ThemeColors.ACCENT_GOLD;
-    private static final Color BUTTON_NORMAL = new Color(22, 22, 22);
-    private static final Color BUTTON_HOVER = new Color(38, 30, 22);
 
     private final JFrame previousPage;
     private final List<TasteQuestion> questions = TasteTestRepository.loadQuestions();
@@ -53,6 +52,7 @@ public class TastePreferencePage extends JFrame {
     private final CardLayout cardLayout = new CardLayout();
     private final JPanel cardPanel = new JPanel(cardLayout);
     private final JLabel resultTitleLabel = new JLabel("", SwingConstants.CENTER);
+    private final JLabel resultImagePlaceholderLabel = new JLabel("Result image", SwingConstants.CENTER);
     private final JTextArea resultDescriptionArea = new JTextArea();
     private final JLabel resultExamplesLabel = new JLabel("", SwingConstants.CENTER);
 
@@ -91,14 +91,7 @@ public class TastePreferencePage extends JFrame {
                 ScreenScale.scale(16)
         ));
 
-        BackButton backButton = new BackButton();
-        backButton.setEnabled(previousPage != null);
-        backButton.addActionListener(e -> {
-            if (previousPage != null) {
-                previousPage.setVisible(true);
-            }
-            dispose();
-        });
+        BackButton backButton = new BackButton(this, previousPage);
 
         topPanel.add(backButton, BorderLayout.WEST);
         return topPanel;
@@ -121,7 +114,8 @@ public class TastePreferencePage extends JFrame {
         progressLabel.setAlignmentX(CENTER_ALIGNMENT);
 
         JPanel questionsPanel = new JPanel();
-        questionsPanel.setOpaque(false);
+        questionsPanel.setOpaque(true);
+        questionsPanel.setBackground(CARD_BACKGROUND);
         questionsPanel.setLayout(new BoxLayout(questionsPanel, BoxLayout.Y_AXIS));
 
         for (int index = 0; index < questions.size(); index++) {
@@ -132,8 +126,10 @@ public class TastePreferencePage extends JFrame {
         }
 
         JScrollPane scrollPane = new JScrollPane(questionsPanel);
-        scrollPane.setOpaque(false);
-        scrollPane.getViewport().setOpaque(false);
+        scrollPane.setOpaque(true);
+        scrollPane.setBackground(CARD_BACKGROUND);
+        scrollPane.getViewport().setOpaque(true);
+        scrollPane.getViewport().setBackground(CARD_BACKGROUND);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.getVerticalScrollBar().setUnitIncrement(ScreenScale.scale(18));
@@ -175,6 +171,9 @@ public class TastePreferencePage extends JFrame {
         resultTitleLabel.setFont(ThemeFonts.bold(28));
         resultTitleLabel.setAlignmentX(CENTER_ALIGNMENT);
 
+        JPanel imagePanel = createResultImagePanel();
+        imagePanel.setAlignmentX(CENTER_ALIGNMENT);
+
         resultDescriptionArea.setEditable(false);
         resultDescriptionArea.setFocusable(false);
         resultDescriptionArea.setLineWrap(true);
@@ -204,6 +203,8 @@ public class TastePreferencePage extends JFrame {
         });
 
         card.add(resultTitleLabel);
+        card.add(Box.createRigidArea(ScreenScale.dimension(0, 20)));
+        card.add(imagePanel);
         card.add(resultDescriptionArea);
         card.add(resultExamplesLabel);
         card.add(Box.createRigidArea(ScreenScale.dimension(0, 24)));
@@ -241,10 +242,34 @@ public class TastePreferencePage extends JFrame {
         return label;
     }
 
+    private JPanel createResultImagePanel() {
+        JPanel imagePanel = new JPanel(new BorderLayout());
+        imagePanel.setOpaque(true);
+        imagePanel.setBackground(QUESTION_CARD_BACKGROUND);
+        imagePanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(ThemeColors.BORDER_ACCENT_DARK, 1),
+                BorderFactory.createEmptyBorder(
+                        ScreenScale.scale(14),
+                        ScreenScale.scale(14),
+                        ScreenScale.scale(14),
+                        ScreenScale.scale(14)
+                )
+        ));
+        imagePanel.setPreferredSize(ScreenScale.dimension(ThemeSizes.TASTING_NOTE_DETAIL_IMAGE_WIDTH, 220));
+        imagePanel.setMaximumSize(ScreenScale.dimension(ThemeSizes.TASTING_NOTE_DETAIL_IMAGE_WIDTH, 220));
+
+        resultImagePlaceholderLabel.setForeground(TEXT_SECONDARY);
+        resultImagePlaceholderLabel.setFont(ThemeFonts.plain(16));
+        resultImagePlaceholderLabel.setPreferredSize(ScreenScale.dimension(ThemeSizes.TASTING_NOTE_DETAIL_IMAGE_WIDTH - 28, 190));
+
+        imagePanel.add(resultImagePlaceholderLabel, BorderLayout.CENTER);
+        return imagePanel;
+    }
+
     private JPanel createQuestionCard(int index, TasteQuestion question) {
         JPanel questionCard = new JPanel();
         questionCard.setOpaque(true);
-        questionCard.setBackground(new Color(24, 24, 24, 210));
+        questionCard.setBackground(QUESTION_CARD_BACKGROUND);
         questionCard.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(ThemeColors.BORDER_ACCENT_DARK, 1),
                 BorderFactory.createEmptyBorder(
@@ -269,7 +294,8 @@ public class TastePreferencePage extends JFrame {
         questionText.setFocusable(false);
         questionText.setLineWrap(true);
         questionText.setWrapStyleWord(true);
-        questionText.setOpaque(false);
+        questionText.setOpaque(true);
+        questionText.setBackground(QUESTION_CARD_BACKGROUND);
         questionText.setForeground(TEXT_PRIMARY);
         questionText.setFont(ThemeFonts.bold(22));
         questionText.setBorder(new EmptyBorder(ScreenScale.scale(10), 0, ScreenScale.scale(12), 0));
@@ -286,12 +312,14 @@ public class TastePreferencePage extends JFrame {
         rightOptionLabel.setFont(ThemeFonts.plain(15));
 
         JPanel labelPanel = new JPanel(new BorderLayout(ScreenScale.scale(12), 0));
-        labelPanel.setOpaque(false);
+        labelPanel.setOpaque(true);
+        labelPanel.setBackground(QUESTION_CARD_BACKGROUND);
         labelPanel.add(leftOptionLabel, BorderLayout.WEST);
         labelPanel.add(rightOptionLabel, BorderLayout.EAST);
 
         JSlider slider = new JSlider(-3, 3, answers[index]);
-        slider.setOpaque(false);
+        slider.setOpaque(true);
+        slider.setBackground(QUESTION_CARD_BACKGROUND);
         slider.setMajorTickSpacing(1);
         slider.setPaintTicks(true);
         slider.setPaintLabels(false);
@@ -371,20 +399,16 @@ public class TastePreferencePage extends JFrame {
                 int arc = ScreenScale.scale(22);
                 int buttonWidth = getWidth();
                 int buttonHeight = getHeight();
-                g2.setColor(hovered ? BUTTON_HOVER : BUTTON_NORMAL);
+                g2.setColor(hovered ? ThemeColors.SURFACE_BUTTON_HOVER : ThemeColors.SURFACE_BUTTON);
                 g2.fillRoundRect(1, 1, buttonWidth - 2, buttonHeight - 2, arc, arc);
 
                 g2.setColor(ACCENT);
                 g2.setStroke(new BasicStroke(1.4f));
                 g2.drawRoundRect(1, 1, buttonWidth - 3, buttonHeight - 3, arc, arc);
-
-                g2.setFont(getFont());
-                g2.setColor(TEXT_PRIMARY);
-                FontMetrics metrics = g2.getFontMetrics();
-                int textX = (buttonWidth - metrics.stringWidth(getText())) / 2;
-                int textY = (buttonHeight - metrics.getHeight()) / 2 + metrics.getAscent();
-                g2.drawString(getText(), textX, textY);
                 g2.dispose();
+
+                setForeground(TEXT_PRIMARY);
+                super.paintComponent(g);
             }
         };
 

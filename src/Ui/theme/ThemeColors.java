@@ -15,6 +15,8 @@ public final class ThemeColors {
     public static final Color SURFACE_PANEL = new Color(18, 18, 18, 242);
     public static final Color SURFACE_CARD = new Color(24, 24, 24);
     public static final Color SURFACE_CARD_OVERLAY = new Color(18, 18, 18, 220);
+    public static final Color SURFACE_BUTTON = new Color(22, 22, 22);
+    public static final Color SURFACE_BUTTON_HOVER = new Color(38, 30, 22);
     public static final Color SURFACE_INPUT = new Color(28, 28, 28);
     public static final Color SURFACE_INPUT_ALT = new Color(32, 32, 32);
     public static final Color SURFACE_THUMBNAIL = new Color(45, 45, 45);

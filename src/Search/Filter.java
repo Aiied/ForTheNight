@@ -2,17 +2,22 @@ package Search;
 
 import Whisky.Whisky;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 
 public class Filter {
     public static final String ALL_OPTION = "All";
+    private static final String COUNTRY_KEY = "country";
+    private static final String TYPE_KEY = "type";
+    private static final String AROMA_KEY = "aroma";
+    private static final String TASTE_KEY = "taste";
+    private static final String FINISH_KEY = "finish";
 
     private final ArrayList<Whisky> allWhiskies;
     private final Map<String, List<String>> optionMap = new LinkedHashMap<>();
@@ -23,23 +28,23 @@ public class Filter {
     }
 
     public List<String> buildCountryOptions() {
-        return getOptions("country");
+        return getOptions(COUNTRY_KEY);
     }
 
     public List<String> buildTypeOptions() {
-        return getOptions("type");
+        return getOptions(TYPE_KEY);
     }
 
     public List<String> buildAromaOptions() {
-        return getOptions("aroma");
+        return getOptions(AROMA_KEY);
     }
 
     public List<String> buildTasteOptions() {
-        return getOptions("taste");
+        return getOptions(TASTE_KEY);
     }
 
     public List<String> buildFinishOptions() {
-        return getOptions("finish");
+        return getOptions(FINISH_KEY);
     }
 
     public ArrayList<Whisky> apply(
@@ -50,32 +55,36 @@ public class Filter {
             String selectedTaste,
             String selectedFinish
     ) {
-        String normalizedKeyword = nameKeyword == null ? "" : nameKeyword.trim().toLowerCase();
+        FilterSelection selection = new FilterSelection(
+                normalizeKeyword(nameKeyword),
+                selectedCountry,
+                selectedType,
+                selectedAroma,
+                selectedTaste,
+                selectedFinish
+        );
         ArrayList<Whisky> filtered = new ArrayList<>();
 
         for (Whisky whisky : allWhiskies) {
-            if (!matchesName(whisky, normalizedKeyword)) {
-                continue;
+            if (matches(whisky, selection)) {
+                filtered.add(whisky);
             }
-            if (!matchesExact(whisky.getCountry(), selectedCountry)) {
-                continue;
-            }
-            if (!matchesExact(whisky.getWhiskyType(), selectedType)) {
-                continue;
-            }
-            if (!matchesNote(whisky.getAroma(), selectedAroma)) {
-                continue;
-            }
-            if (!matchesNote(whisky.getTaste(), selectedTaste)) {
-                continue;
-            }
-            if (!matchesNote(whisky.getFinish(), selectedFinish)) {
-                continue;
-            }
-            filtered.add(whisky);
         }
 
         return filtered;
+    }
+
+    private boolean matches(Whisky whisky, FilterSelection selection) {
+        return matchesName(whisky, selection.nameKeyword())
+                && matchesExact(whisky.getCountry(), selection.selectedCountry())
+                && matchesExact(whisky.getWhiskyType(), selection.selectedType())
+                && matchesNote(whisky.getAroma(), selection.selectedAroma())
+                && matchesNote(whisky.getTaste(), selection.selectedTaste())
+                && matchesNote(whisky.getFinish(), selection.selectedFinish());
+    }
+
+    private String normalizeKeyword(String keyword) {
+        return keyword == null ? "" : keyword.trim().toLowerCase();
     }
 
     private boolean matchesName(Whisky whisky, String keyword) {
@@ -92,7 +101,7 @@ public class Filter {
         return selected.equals(value);
     }
 
-    private boolean matchesNote(ArrayList<String> notes, String selected) {
+    private boolean matchesNote(List<String> notes, String selected) {
         if (selected == null || ALL_OPTION.equals(selected)) {
             return true;
         }
@@ -147,5 +156,15 @@ public class Filter {
             return List.of(ALL_OPTION);
         }
         return loaded;
+    }
+
+    private record FilterSelection(
+            String nameKeyword,
+            String selectedCountry,
+            String selectedType,
+            String selectedAroma,
+            String selectedTaste,
+            String selectedFinish
+    ) {
     }
 }

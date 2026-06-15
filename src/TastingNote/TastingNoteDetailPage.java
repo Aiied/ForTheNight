@@ -9,6 +9,7 @@ import Ui.theme.ScreenScale;
 import Ui.theme.ThemeColors;
 import Ui.theme.ThemeFonts;
 import Ui.theme.ThemeSizes;
+import Ui.theme.ThemeSpacing;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -45,17 +46,13 @@ public class TastingNoteDetailPage extends JFrame {
         JPanel contentPanel = new BackgroundPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         contentPanel.setBorder(BorderFactory.createEmptyBorder(
-                ScreenScale.scale(18),
-                ScreenScale.scale(18),
-                ScreenScale.scale(18),
-                ScreenScale.scale(18)
+                ThemeSpacing.scale(ThemeSpacing.SPACE_18),
+                ThemeSpacing.scale(ThemeSpacing.SPACE_18),
+                ThemeSpacing.scale(ThemeSpacing.SPACE_18),
+                ThemeSpacing.scale(ThemeSpacing.SPACE_18)
         ));
 
-        JButton backButton = new BackButton();
-        backButton.addActionListener(e -> {
-            previousPage.setVisible(true);
-            dispose();
-        });
+        JButton backButton = new BackButton(this, previousPage);
 
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setOpaque(false);
@@ -92,17 +89,17 @@ public class TastingNoteDetailPage extends JFrame {
         imageLabel.setAlignmentX(CENTER_ALIGNMENT);
 
         contentPanel.add(topPanel);
-        contentPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 18)));
+        contentPanel.add(ThemeSpacing.verticalGap(ThemeSpacing.SPACE_18));
         contentPanel.add(nameLabel);
-        contentPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 6)));
+        contentPanel.add(ThemeSpacing.verticalGap(ThemeSpacing.SPACE_6));
         contentPanel.add(dateLabel);
-        contentPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 10)));
+        contentPanel.add(ThemeSpacing.verticalGap(ThemeSpacing.SPACE_10));
         contentPanel.add(scorePanel);
         if (hasImage()) {
-            contentPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 18)));
+            contentPanel.add(ThemeSpacing.verticalGap(ThemeSpacing.SPACE_18));
             contentPanel.add(imageLabel);
         }
-        contentPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 18)));
+        contentPanel.add(ThemeSpacing.verticalGap(ThemeSpacing.SPACE_18));
         contentPanel.add(createInfoPanel());
 
         JScrollPane scrollPane = new JScrollPane(contentPanel);
@@ -119,10 +116,10 @@ public class TastingNoteDetailPage extends JFrame {
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
         infoPanel.setBackground(ThemeColors.SURFACE_CARD);
         infoPanel.setBorder(BorderFactory.createEmptyBorder(
-                ScreenScale.scale(16),
-                ScreenScale.scale(16),
-                ScreenScale.scale(16),
-                ScreenScale.scale(16)
+                ThemeSpacing.scale(ThemeSpacing.PAGE_MARGIN),
+                ThemeSpacing.scale(ThemeSpacing.PAGE_MARGIN),
+                ThemeSpacing.scale(ThemeSpacing.PAGE_MARGIN),
+                ThemeSpacing.scale(ThemeSpacing.PAGE_MARGIN)
         ));
         infoPanel.setAlignmentX(CENTER_ALIGNMENT);
         infoPanel.setMaximumSize(ScreenScale.dimension(760, 460));
@@ -174,7 +171,7 @@ public class TastingNoteDetailPage extends JFrame {
 
             panel.add(star);
             if (i < STAR_COUNT - 1) {
-                panel.add(Box.createRigidArea(ScreenScale.dimension(3, 0)));
+                panel.add(ThemeSpacing.horizontalGap(3));
             }
         }
         return panel;

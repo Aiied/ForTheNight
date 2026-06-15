@@ -8,6 +8,7 @@ import Ui.theme.ScreenScale;
 import Ui.theme.ThemeColors;
 import Ui.theme.ThemeFonts;
 import Ui.theme.ThemeSizes;
+import Ui.theme.ThemeSpacing;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -38,17 +39,13 @@ public class WhiskyDetailPage extends JFrame {
         JPanel contentPanel = new BackgroundPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         contentPanel.setBorder(BorderFactory.createEmptyBorder(
-                ScreenScale.scale(18),
-                ScreenScale.scale(18),
-                ScreenScale.scale(18),
-                ScreenScale.scale(18)
+                ThemeSpacing.scale(ThemeSpacing.SPACE_18),
+                ThemeSpacing.scale(ThemeSpacing.SPACE_18),
+                ThemeSpacing.scale(ThemeSpacing.SPACE_18),
+                ThemeSpacing.scale(ThemeSpacing.SPACE_18)
         ));
 
-        JButton backButton = new BackButton();
-        backButton.addActionListener(e -> {
-            previousPage.setVisible(true);
-            dispose();
-        });
+        JButton backButton = new BackButton(this, previousPage);
 
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setOpaque(false);
@@ -81,11 +78,11 @@ public class WhiskyDetailPage extends JFrame {
         nameRow.setAlignmentX(CENTER_ALIGNMENT);
 
         contentPanel.add(topPanel);
-        contentPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 18)));
+        contentPanel.add(ThemeSpacing.verticalGap(ThemeSpacing.SPACE_18));
         contentPanel.add(imageLabel);
-        contentPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 18)));
+        contentPanel.add(ThemeSpacing.verticalGap(ThemeSpacing.SPACE_18));
         contentPanel.add(nameRow);
-        contentPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 18)));
+        contentPanel.add(ThemeSpacing.verticalGap(ThemeSpacing.SPACE_18));
         contentPanel.add(createInfoPanel());
 
         JScrollPane scrollPane = new JScrollPane(contentPanel);
@@ -102,10 +99,10 @@ public class WhiskyDetailPage extends JFrame {
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
         infoPanel.setBackground(ThemeColors.SURFACE_CARD);
         infoPanel.setBorder(BorderFactory.createEmptyBorder(
-                ScreenScale.scale(16),
-                ScreenScale.scale(16),
-                ScreenScale.scale(16),
-                ScreenScale.scale(16)
+                ThemeSpacing.scale(ThemeSpacing.PAGE_MARGIN),
+                ThemeSpacing.scale(ThemeSpacing.PAGE_MARGIN),
+                ThemeSpacing.scale(ThemeSpacing.PAGE_MARGIN),
+                ThemeSpacing.scale(ThemeSpacing.PAGE_MARGIN)
         ));
         infoPanel.setAlignmentX(CENTER_ALIGNMENT);
         infoPanel.setMaximumSize(ScreenScale.dimension(720, 320));

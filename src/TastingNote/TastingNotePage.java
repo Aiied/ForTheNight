@@ -9,6 +9,7 @@ import Ui.theme.ScreenScale;
 import Ui.theme.ThemeColors;
 import Ui.theme.ThemeFonts;
 import Ui.theme.ThemeSizes;
+import Ui.theme.ThemeSpacing;
 import Ui.util.AppPaths;
 
 import javax.swing.BorderFactory;
@@ -48,20 +49,14 @@ public class TastingNotePage extends JFrame {
         setLocationRelativeTo(null);
         setContentPane(new BackgroundPanel(new BorderLayout()));
 
-        JButton backButton = new BackButton();
-        backButton.addActionListener(e -> {
-            if (this.previousPage != null) {
-                this.previousPage.setVisible(true);
-            }
-            dispose();
-        });
+        JButton backButton = new BackButton(this, this.previousPage);
 
         JPanel topPanel = new BackgroundPanel(new BorderLayout());
         topPanel.setBorder(BorderFactory.createEmptyBorder(
-                ScreenScale.scale(12),
-                ScreenScale.scale(16),
+                ThemeSpacing.scale(ThemeSpacing.SPACE_12),
+                ThemeSpacing.scale(ThemeSpacing.PAGE_MARGIN),
                 0,
-                ScreenScale.scale(16)
+                ThemeSpacing.scale(ThemeSpacing.PAGE_MARGIN)
         ));
         topPanel.add(backButton, BorderLayout.WEST);
 
@@ -69,18 +64,18 @@ public class TastingNotePage extends JFrame {
         titleLabel.setForeground(ThemeColors.TEXT_WHITE);
         titleLabel.setFont(ThemeFonts.bold(24));
         titleLabel.setBorder(BorderFactory.createEmptyBorder(
-                ScreenScale.scale(10),
-                ScreenScale.scale(18),
-                ScreenScale.scale(12),
+                ThemeSpacing.scale(ThemeSpacing.SPACE_10),
+                ThemeSpacing.scale(ThemeSpacing.SPACE_18),
+                ThemeSpacing.scale(ThemeSpacing.SPACE_12),
                 0
         ));
 
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         listPanel.setBorder(BorderFactory.createEmptyBorder(
-                ScreenScale.scale(8),
-                ScreenScale.scale(16),
-                ScreenScale.scale(16),
-                ScreenScale.scale(16)
+                ThemeSpacing.scale(ThemeSpacing.SPACE_8),
+                ThemeSpacing.scale(ThemeSpacing.PAGE_MARGIN),
+                ThemeSpacing.scale(ThemeSpacing.PAGE_MARGIN),
+                ThemeSpacing.scale(ThemeSpacing.PAGE_MARGIN)
         ));
 
         refreshList();
@@ -107,7 +102,7 @@ public class TastingNotePage extends JFrame {
         });
 
         JPanel bottomPanel = new BackgroundPanel();
-        bottomPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, ScreenScale.scale(32), 0));
+        bottomPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, ThemeSpacing.scale(ThemeSpacing.SPACE_32), 0));
         bottomPanel.add(newNoteButton);
 
         add(topPanel, BorderLayout.NORTH);
@@ -133,7 +128,7 @@ public class TastingNotePage extends JFrame {
             emptyLabel.setForeground(ThemeColors.TEXT_WHITE);
             emptyLabel.setFont(ThemeFonts.bold(16));
             emptyLabel.setAlignmentX(CENTER_ALIGNMENT);
-            emptyLabel.setBorder(BorderFactory.createEmptyBorder(ScreenScale.scale(40), 0, 0, 0));
+            emptyLabel.setBorder(BorderFactory.createEmptyBorder(ThemeSpacing.scale(40), 0, 0, 0));
             listPanel.add(emptyLabel);
             listPanel.revalidate();
             listPanel.repaint();
@@ -142,7 +137,7 @@ public class TastingNotePage extends JFrame {
 
         for (int i = 0; i < notes.size(); i++) {
             listPanel.add(createNoteItem(notes.get(i), i));
-            listPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 10)));
+            listPanel.add(ThemeSpacing.verticalGap(ThemeSpacing.SPACE_10));
         }
 
         listPanel.revalidate();
@@ -184,13 +179,13 @@ public class TastingNotePage extends JFrame {
         textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
         textPanel.setOpaque(false);
         textPanel.add(nameLabel);
-        textPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 4)));
+        textPanel.add(ThemeSpacing.verticalGap(ThemeSpacing.SPACE_4));
         textPanel.add(dateLabel);
         if (note.getImagePath() != null && !note.getImagePath().isBlank()) {
             JLabel photoLabel = new JLabel("Photo attached");
             photoLabel.setForeground(ThemeColors.TEXT_MUTED);
             photoLabel.setFont(ThemeFonts.plain(12));
-            textPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 4)));
+            textPanel.add(ThemeSpacing.verticalGap(ThemeSpacing.SPACE_4));
             textPanel.add(photoLabel);
         }
 
@@ -227,7 +222,7 @@ public class TastingNotePage extends JFrame {
 
             panel.add(star);
             if (i < STAR_COUNT - 1) {
-                panel.add(Box.createRigidArea(ScreenScale.dimension(2, 0)));
+                panel.add(ThemeSpacing.horizontalGap(ThemeSpacing.SPACE_2));
             }
         }
 
