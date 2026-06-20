@@ -3,6 +3,9 @@ package InitialSetup.taste;
 import Ui.buttons.AbstractActionButton;
 import Ui.buttons.BackButton;
 import Ui.panel.BackgroundPanel;
+import Ui.text.AppStrings;
+import Ui.text.TastePreferenceStrings;
+import Ui.util.AppPaths;
 import Ui.theme.ScreenScale;
 import Ui.theme.ThemeColors;
 import Ui.theme.ThemeFonts;
@@ -21,6 +24,7 @@ import javax.swing.JSlider;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.ImageIcon;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -30,9 +34,11 @@ import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +58,7 @@ public class TastePreferencePage extends JFrame {
     private final CardLayout cardLayout = new CardLayout();
     private final JPanel cardPanel = new JPanel(cardLayout);
     private final JLabel resultTitleLabel = new JLabel("", SwingConstants.CENTER);
-    private final JLabel resultImagePlaceholderLabel = new JLabel("Result image", SwingConstants.CENTER);
+    private final JLabel resultImagePlaceholderLabel = new JLabel(TastePreferenceStrings.RESULT_IMAGE_PLACEHOLDER, SwingConstants.CENTER);
     private final JTextArea resultDescriptionArea = new JTextArea();
     private final JLabel resultExamplesLabel = new JLabel("", SwingConstants.CENTER);
 
@@ -60,14 +66,14 @@ public class TastePreferencePage extends JFrame {
         this.previousPage = previousPage;
         this.answers = new int[Math.max(questions.size(), 1)];
 
-        setTitle("Whisky Taste Test");
+        setTitle(TastePreferenceStrings.PAGE_TITLE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setContentPane(new BackgroundPanel(new BorderLayout()));
 
         if (questions.isEmpty() || results.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Taste test data could not be loaded.");
+            JOptionPane.showMessageDialog(this, TastePreferenceStrings.LOAD_FAILED);
             openMainPage();
             dispose();
             return;
@@ -75,8 +81,8 @@ public class TastePreferencePage extends JFrame {
 
         add(createTopPanel(), BorderLayout.NORTH);
         cardPanel.setOpaque(false);
-        cardPanel.add(createQuestionView(), "question");
-        cardPanel.add(createResultView(), "result");
+        cardPanel.add(createQuestionView(), TastePreferenceStrings.QUESTION_CARD);
+        cardPanel.add(createResultView(), TastePreferenceStrings.RESULT_CARD);
         add(cardPanel, BorderLayout.CENTER);
 
         setVisible(true);
@@ -101,14 +107,17 @@ public class TastePreferencePage extends JFrame {
         JPanel outerPanel = new BackgroundPanel();
         outerPanel.setLayout(new BoxLayout(outerPanel, BoxLayout.Y_AXIS));
 
-        JLabel titleLabel = createTitleLabel("Find Your Whisky");
+        JLabel titleLabel = createTitleLabel(TastePreferenceStrings.FIND_YOUR_WHISKY);
         titleLabel.setAlignmentX(CENTER_ALIGNMENT);
 
         JPanel card = createCardPanel();
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
         card.setMaximumSize(ScreenScale.dimension(980, 760));
 
-        JLabel progressLabel = new JLabel("Answer all " + questions.size() + " questions.", SwingConstants.CENTER);
+        JLabel progressLabel = new JLabel(
+                TastePreferenceStrings.PROGRESS_TEMPLATE.formatted(questions.size()),
+                SwingConstants.CENTER
+        );
         progressLabel.setForeground(TEXT_SECONDARY);
         progressLabel.setFont(ThemeFonts.bold(18));
         progressLabel.setAlignmentX(CENTER_ALIGNMENT);
@@ -137,7 +146,7 @@ public class TastePreferencePage extends JFrame {
         scrollPane.setPreferredSize(ScreenScale.dimension(900, 520));
         scrollPane.setMaximumSize(ScreenScale.dimension(900, 520));
 
-        JButton showResultButton = createActionButton("SEE RESULT", 170);
+        JButton showResultButton = createActionButton(TastePreferenceStrings.SEE_RESULT, 170);
         showResultButton.setAlignmentX(CENTER_ALIGNMENT);
         showResultButton.addActionListener(e -> showResult());
 
@@ -160,7 +169,7 @@ public class TastePreferencePage extends JFrame {
         JPanel outerPanel = new BackgroundPanel();
         outerPanel.setLayout(new BoxLayout(outerPanel, BoxLayout.Y_AXIS));
 
-        JLabel titleLabel = createTitleLabel("Your Whisky Match");
+        JLabel titleLabel = createTitleLabel(TastePreferenceStrings.YOUR_WHISKY_MATCH);
         titleLabel.setAlignmentX(CENTER_ALIGNMENT);
 
         JPanel card = createCardPanel();
@@ -192,7 +201,7 @@ public class TastePreferencePage extends JFrame {
         resultExamplesLabel.setFont(ThemeFonts.bold(18));
         resultExamplesLabel.setAlignmentX(CENTER_ALIGNMENT);
 
-        JButton continueButton = createActionButton("CONTINUE", 190);
+        JButton continueButton = createActionButton(TastePreferenceStrings.CONTINUE, 190);
         continueButton.setAlignmentX(CENTER_ALIGNMENT);
         continueButton.addActionListener(e -> {
             if (previousPage != null) {
@@ -266,6 +275,52 @@ public class TastePreferencePage extends JFrame {
         return imagePanel;
     }
 
+    private void updateResultImage(String resultKey) {
+        String imagePath = getResultImagePath(resultKey);
+        if (imagePath == null) {
+            resultImagePlaceholderLabel.setIcon(null);
+            resultImagePlaceholderLabel.setText(TastePreferenceStrings.RESULT_IMAGE_PLACEHOLDER);
+            return;
+        }
+
+        File imageFile = new File(imagePath);
+        if (!imageFile.exists()) {
+            resultImagePlaceholderLabel.setIcon(null);
+            resultImagePlaceholderLabel.setText(TastePreferenceStrings.RESULT_IMAGE_PLACEHOLDER);
+            return;
+        }
+
+        Image scaledImage = new ImageIcon(imagePath).getImage().getScaledInstance(
+                ScreenScale.scale(ThemeSizes.TASTING_NOTE_DETAIL_IMAGE_WIDTH - 28),
+                ScreenScale.scale(190),
+                Image.SCALE_SMOOTH
+        );
+        resultImagePlaceholderLabel.setText("");
+        resultImagePlaceholderLabel.setIcon(new ImageIcon(scaledImage));
+    }
+
+    private String getResultImagePath(String resultKey) {
+        if ("blended".equals(resultKey)) {
+            return AppPaths.TASTE_TEST_BLENDED_RESULT_IMAGE;
+        }
+        if ("bourbon_cask".equals(resultKey)) {
+            return AppPaths.TASTE_TEST_BOURBON_CASK_RESULT_IMAGE;
+        }
+        if ("bourbon".equals(resultKey)) {
+            return AppPaths.TASTE_TEST_BOURBON_RESULT_IMAGE;
+        }
+        if ("independent_bottling".equals(resultKey)) {
+            return AppPaths.TASTE_TEST_INDEPENDENT_BOTTLING_RESULT_IMAGE;
+        }
+        if ("peat".equals(resultKey)) {
+            return AppPaths.TASTE_TEST_PEAT_RESULT_IMAGE;
+        }
+        if ("sherry_cask".equals(resultKey)) {
+            return AppPaths.TASTE_TEST_SHERRY_CASK_RESULT_IMAGE;
+        }
+        return null;
+    }
+
     private JPanel createQuestionCard(int index, TasteQuestion question) {
         JPanel questionCard = new JPanel();
         questionCard.setOpaque(true);
@@ -283,7 +338,7 @@ public class TastePreferencePage extends JFrame {
         questionCard.setAlignmentX(CENTER_ALIGNMENT);
         questionCard.setMaximumSize(new Dimension(ScreenScale.scale(860), Integer.MAX_VALUE));
 
-        JLabel numberLabel = new JLabel("Q" + (index + 1));
+        JLabel numberLabel = new JLabel(TastePreferenceStrings.QUESTION_PREFIX + (index + 1));
         numberLabel.setForeground(ACCENT);
         numberLabel.setFont(ThemeFonts.bold(15));
         numberLabel.setAlignmentX(CENTER_ALIGNMENT);
@@ -360,15 +415,16 @@ public class TastePreferencePage extends JFrame {
         }
 
         if (bestProfile == null) {
-            JOptionPane.showMessageDialog(this, "Could not calculate a taste result.");
+            JOptionPane.showMessageDialog(this, TastePreferenceStrings.RESULT_CALCULATION_FAILED);
             return;
         }
 
         resultTitleLabel.setText(bestProfile.getTitle());
+        updateResultImage(bestProfile.getKey());
         resultDescriptionArea.setText(bestProfile.getDescription());
         resultDescriptionArea.setCaretPosition(0);
-        resultExamplesLabel.setText("Recommended examples: " + bestProfile.getExamples());
-        cardLayout.show(cardPanel, "result");
+        resultExamplesLabel.setText(TastePreferenceStrings.RECOMMENDED_EXAMPLES_TEMPLATE.formatted(bestProfile.getExamples()));
+        cardLayout.show(cardPanel, TastePreferenceStrings.RESULT_CARD);
     }
 
     private JButton createActionButton(String text, int width) {
@@ -442,7 +498,7 @@ public class TastePreferencePage extends JFrame {
 
     private void openMainPage() {
         try {
-            Class<?> mainPageClass = Class.forName("MainPage");
+            Class<?> mainPageClass = Class.forName(AppStrings.MAIN_PAGE_CLASS);
             JFrame mainPage = (JFrame) mainPageClass.getDeclaredConstructor().newInstance();
             mainPage.setVisible(true);
         } catch (Exception e) {

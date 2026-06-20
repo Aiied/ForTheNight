@@ -6,6 +6,7 @@ public final class AppPaths {
     public static final String IMAGE_DIR = ASSETS_DIR + "/image";
     public static final String UI_IMAGE_DIR = IMAGE_DIR + "/Ui";
     public static final String PAIRING_IMAGE_DIR = IMAGE_DIR + "/Pairing";
+    public static final String TASTE_TEST_IMAGE_DIR = IMAGE_DIR + "/TasteTest";
     public static final String TASTING_NOTE_IMAGE_DIR = IMAGE_DIR + "/TastingNote";
 
     public static final String FAVORITE_WHISKIES_FILE = TEXT_DIR + "/favoriteWhiskies.txt";
@@ -23,6 +24,12 @@ public final class AppPaths {
     public static final String SEARCH_BUTTON_IMAGE = UI_IMAGE_DIR + "/SearchButton.png";
     public static final String TASTE_TEST_BUTTON_IMAGE = UI_IMAGE_DIR + "/TasteTestButton.png";
     public static final String TASTING_NOTE_BUTTON_IMAGE = UI_IMAGE_DIR + "/TastingNoteButton.png";
+    public static final String TASTE_TEST_BLENDED_RESULT_IMAGE = TASTE_TEST_IMAGE_DIR + "/BlendedResult.png";
+    public static final String TASTE_TEST_BOURBON_CASK_RESULT_IMAGE = TASTE_TEST_IMAGE_DIR + "/BourbonCaskResult.png";
+    public static final String TASTE_TEST_BOURBON_RESULT_IMAGE = TASTE_TEST_IMAGE_DIR + "/BourbonResult.png";
+    public static final String TASTE_TEST_INDEPENDENT_BOTTLING_RESULT_IMAGE = TASTE_TEST_IMAGE_DIR + "/IndependentBottlingResult.png";
+    public static final String TASTE_TEST_PEAT_RESULT_IMAGE = TASTE_TEST_IMAGE_DIR + "/PeatResult.png";
+    public static final String TASTE_TEST_SHERRY_CASK_RESULT_IMAGE = TASTE_TEST_IMAGE_DIR + "/SherryCaskResult.png";
 
     private AppPaths() {
     }

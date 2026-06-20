@@ -4,6 +4,7 @@ import Ui.buttons.BackButton;
 import Ui.buttons.FavoriteStarButton;
 import Ui.component.FixedImageLabel;
 import Ui.panel.BackgroundPanel;
+import Ui.text.WhiskyStrings;
 import Ui.theme.ScreenScale;
 import Ui.theme.ThemeColors;
 import Ui.theme.ThemeFonts;
@@ -16,11 +17,11 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
-import java.awt.Cursor;
-import java.awt.Font;
+import java.awt.Dimension;
 import java.util.ArrayList;
 
 public class WhiskyDetailPage extends JFrame {
@@ -52,34 +53,19 @@ public class WhiskyDetailPage extends JFrame {
         topPanel.setMaximumSize(ScreenScale.dimension(Integer.MAX_VALUE, 52));
         topPanel.add(backButton, BorderLayout.WEST);
 
-        JLabel imageLabel = new FixedImageLabel(
-                whisky.getImagePath(),
-                ThemeSizes.WHISKY_DETAIL_IMAGE_WIDTH,
-                ThemeSizes.WHISKY_DETAIL_IMAGE_HEIGHT,
-                ThemeSizes.scaledWhiskyDetailImage(),
-                true
-        );
-        imageLabel.setAlignmentX(CENTER_ALIGNMENT);
-
-        JPanel nameRow = new JPanel(new BorderLayout(10, 0));
-        nameRow.setOpaque(false);
-        nameRow.setMaximumSize(ScreenScale.dimension(
-                ThemeSizes.WHISKY_DETAIL_NAME_ROW_WIDTH,
-                ThemeSizes.WHISKY_DETAIL_NAME_ROW_HEIGHT
-        ));
-
         JLabel nameLabel = new JLabel(whisky.getName());
         nameLabel.setForeground(ThemeColors.TEXT_WHITE);
         nameLabel.setFont(ThemeFonts.bold(24));
+        nameLabel.setHorizontalAlignment(JLabel.CENTER);
 
         FavoriteStarButton starButton = new FavoriteStarButton(whisky.getName(), ScreenScale.scale(34));
-        nameRow.add(nameLabel, BorderLayout.CENTER);
-        nameRow.add(starButton, BorderLayout.EAST);
+        JPanel imagePanel = createImagePanel(starButton);
+        JPanel nameRow = createNameRow(nameLabel);
         nameRow.setAlignmentX(CENTER_ALIGNMENT);
 
         contentPanel.add(topPanel);
         contentPanel.add(ThemeSpacing.verticalGap(ThemeSpacing.SPACE_18));
-        contentPanel.add(imageLabel);
+        contentPanel.add(imagePanel);
         contentPanel.add(ThemeSpacing.verticalGap(ThemeSpacing.SPACE_18));
         contentPanel.add(nameRow);
         contentPanel.add(ThemeSpacing.verticalGap(ThemeSpacing.SPACE_18));
@@ -92,6 +78,55 @@ public class WhiskyDetailPage extends JFrame {
         add(scrollPane);
 
         setVisible(true);
+    }
+
+    private JPanel createImagePanel(FavoriteStarButton starButton) {
+        Dimension imageSize = ThemeSizes.scaledWhiskyDetailImage();
+        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane.setOpaque(false);
+        layeredPane.setPreferredSize(imageSize);
+        layeredPane.setMinimumSize(imageSize);
+        layeredPane.setMaximumSize(imageSize);
+        layeredPane.setSize(imageSize);
+
+        JLabel imageLabel = new FixedImageLabel(
+                whisky.getImagePath(),
+                ThemeSizes.WHISKY_DETAIL_IMAGE_WIDTH,
+                ThemeSizes.WHISKY_DETAIL_IMAGE_HEIGHT,
+                imageSize,
+                true
+        );
+        imageLabel.setBounds(0, 0, imageSize.width, imageSize.height);
+
+        int starSize = starButton.getPreferredSize().width;
+        int starInset = ThemeSpacing.scale(ThemeSpacing.SPACE_10);
+        starButton.setBounds(
+                imageSize.width - starSize - starInset,
+                starInset,
+                starSize,
+                starSize
+        );
+
+        layeredPane.add(imageLabel, Integer.valueOf(0));
+        layeredPane.add(starButton, Integer.valueOf(1));
+
+        JPanel wrapper = new JPanel(new BorderLayout());
+        wrapper.setOpaque(false);
+        wrapper.setAlignmentX(CENTER_ALIGNMENT);
+        wrapper.setMaximumSize(imageSize);
+        wrapper.add(layeredPane, BorderLayout.CENTER);
+        return wrapper;
+    }
+
+    private JPanel createNameRow(JLabel nameLabel) {
+        JPanel nameRow = new JPanel(new BorderLayout());
+        nameRow.setOpaque(false);
+        nameRow.setMaximumSize(ScreenScale.dimension(
+                ThemeSizes.WHISKY_DETAIL_NAME_ROW_WIDTH,
+                ThemeSizes.WHISKY_DETAIL_NAME_ROW_HEIGHT
+        ));
+        nameRow.add(nameLabel, BorderLayout.CENTER);
+        return nameRow;
     }
 
     private JPanel createInfoPanel() {
@@ -107,14 +142,14 @@ public class WhiskyDetailPage extends JFrame {
         infoPanel.setAlignmentX(CENTER_ALIGNMENT);
         infoPanel.setMaximumSize(ScreenScale.dimension(720, 320));
 
-        infoPanel.add(createInfoRow("Country", whisky.getCountry()));
-        infoPanel.add(createInfoRow("Type", whisky.getWhiskyType()));
-        infoPanel.add(createInfoRow("Distillery", whisky.getDistillery()));
-        infoPanel.add(createInfoRow("Cask", whisky.getCask()));
-        infoPanel.add(createInfoRow("Abv", formatAbv()));
-        infoPanel.add(createInfoRow("Aroma", joinNotes(whisky.getAroma())));
-        infoPanel.add(createInfoRow("Taste", joinNotes(whisky.getTaste())));
-        infoPanel.add(createInfoRow("Finish", joinNotes(whisky.getFinish())));
+        infoPanel.add(createInfoRow(WhiskyStrings.LABEL_COUNTRY, whisky.getCountry()));
+        infoPanel.add(createInfoRow(WhiskyStrings.LABEL_TYPE, whisky.getWhiskyType()));
+        infoPanel.add(createInfoRow(WhiskyStrings.LABEL_DISTILLERY, whisky.getDistillery()));
+        infoPanel.add(createInfoRow(WhiskyStrings.LABEL_CASK, whisky.getCask()));
+        infoPanel.add(createInfoRow(WhiskyStrings.LABEL_ABV, formatAbv()));
+        infoPanel.add(createInfoRow(WhiskyStrings.LABEL_AROMA, joinNotes(whisky.getAroma())));
+        infoPanel.add(createInfoRow(WhiskyStrings.LABEL_TASTE, joinNotes(whisky.getTaste())));
+        infoPanel.add(createInfoRow(WhiskyStrings.LABEL_FINISH, joinNotes(whisky.getFinish())));
 
         return infoPanel;
     }
@@ -129,7 +164,7 @@ public class WhiskyDetailPage extends JFrame {
         titleLabel.setForeground(ThemeColors.TEXT_SECONDARY);
         titleLabel.setFont(ThemeFonts.bold(13));
 
-        JLabel valueLabel = new JLabel(isBlank(value) ? "-" : value);
+        JLabel valueLabel = new JLabel(isBlank(value) ? WhiskyStrings.EMPTY_VALUE : value);
         valueLabel.setForeground(ThemeColors.TEXT_WHITE);
         valueLabel.setFont(ThemeFonts.plain(14));
 
@@ -140,7 +175,7 @@ public class WhiskyDetailPage extends JFrame {
     }
     private String formatAbv() {
         if (whisky.getAbv() == 0.0f) {
-            return "-";
+            return WhiskyStrings.EMPTY_VALUE;
         }
 
         return whisky.getAbv() + "%";

@@ -8,10 +8,12 @@ import Ui.buttons.TastingNoteButton;
 import Ui.buttons.TasteTestButton;
 import Ui.icon.ImageScaler;
 import Ui.panel.BackgroundPanel;
+import Ui.text.AppStrings;
 import Ui.theme.ScreenScale;
 import Ui.theme.ThemeColors;
 import Ui.theme.ThemeFonts;
 import Ui.theme.ThemeSizes;
+import Ui.theme.ThemeSpacing;
 import Ui.util.AppPaths;
 
 import javax.swing.*;
@@ -19,7 +21,7 @@ import java.awt.BorderLayout;
 
 public class MainPage extends JFrame {
     public MainPage() {
-        setTitle("Main");
+        setTitle(AppStrings.MAIN_PAGE_TITLE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -60,20 +62,20 @@ public class MainPage extends JFrame {
             setVisible(false);
         });
 
-        menuPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 4)));
+        menuPanel.add(ThemeSpacing.verticalGap(ThemeSpacing.SPACE_4));
         menuPanel.add(diaryButton);
-        menuPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 18)));
+        menuPanel.add(ThemeSpacing.verticalGap(ThemeSpacing.SPACE_18));
         menuPanel.add(searchButton);
-        menuPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 18)));
+        menuPanel.add(ThemeSpacing.verticalGap(ThemeSpacing.SPACE_18));
         menuPanel.add(pairingButton);
-        menuPanel.add(Box.createRigidArea(ScreenScale.dimension(0, 18)));
+        menuPanel.add(ThemeSpacing.verticalGap(ThemeSpacing.SPACE_18));
         menuPanel.add(tasteTestButton);
         menuPanel.add(Box.createVerticalGlue());
 
         panel.setBorder(BorderFactory.createEmptyBorder(
-                ScreenScale.scale(8),
+                ThemeSpacing.scale(ThemeSpacing.SPACE_8),
                 ScreenScale.scale(50),
-                ScreenScale.scale(18),
+                ThemeSpacing.scale(ThemeSpacing.SPACE_18),
                 ScreenScale.scale(50)
         ));
         panel.add(menuPanel, BorderLayout.CENTER);
@@ -85,7 +87,7 @@ public class MainPage extends JFrame {
     private JPanel createLogoPanel() {
         JPanel logoPanel = new JPanel(new BorderLayout());
         logoPanel.setOpaque(false);
-        logoPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, ScreenScale.scale(6), 0));
+        logoPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, ThemeSpacing.scale(ThemeSpacing.SPACE_6), 0));
 
         JLabel logoLabel = new JLabel();
         logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -98,7 +100,7 @@ public class MainPage extends JFrame {
         if (logoIcon != null) {
             logoLabel.setIcon(logoIcon);
         } else {
-            logoLabel.setText("For The Night");
+            logoLabel.setText(AppStrings.APP_NAME);
             logoLabel.setForeground(ThemeColors.TEXT_WHITE);
             logoLabel.setFont(ThemeFonts.bold(36));
         }

@@ -1,5 +1,6 @@
 package Search;
 
+import Ui.text.SearchStrings;
 import Whisky.Whisky;
 
 import java.io.BufferedReader;
@@ -12,7 +13,7 @@ import java.util.Map;
 import java.util.TreeSet;
 
 public class Filter {
-    public static final String ALL_OPTION = "All";
+    public static final String ALL_OPTION = SearchStrings.FILTER_ALL;
     private static final String COUNTRY_KEY = "country";
     private static final String TYPE_KEY = "type";
     private static final String AROMA_KEY = "aroma";

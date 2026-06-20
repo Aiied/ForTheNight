@@ -1,11 +1,36 @@
 Whisky Image License Summary
-Last checked: 2026-06-14
+Last checked: 2026-06-21
+
+[Currently used images]
+
+[Source confirmation needed]
+Lagavulin 8 Years Old
+- Local file: src/assets/image/Whisky/Lagavulin8YearsOld.png
+- License status: Source license not yet confirmed
+
+Singleton Dufftown 12 Years Old
+- Local file: src/assets/image/Whisky/SingletonDufftown12YearsOld.png
+- License status: Source license not yet confirmed
+
+Black Bottle
+- Local file: src/assets/image/Whisky/BlackBottle.png
+- License status: Source license not yet confirmed
 
 [Downloaded and linked]
 Jameson Standard
 - Local file: src/assets/image/Whisky/JamesonStandard.jpg
 - Source: https://commons.wikimedia.org/wiki/File:Bottles_of_Jameson_Irish_Whiskey.JPG
 - License: Public Domain
+
+Johnnie Walker Black
+- Local file: src/assets/image/Whisky/JohnnieWalkerBlack.jpg
+- Source: https://commons.wikimedia.org/wiki/File:Black_Label1.JPG
+- License: Public Domain
+
+Monkey Shoulder
+- Local file: src/assets/image/Whisky/MonkeyShoulder.jpg
+- Source: https://commons.wikimedia.org/wiki/File:Monkey_Shoulder_scotch_bottle.jpg
+- License: CC BY-SA 3.0
 
 Buffalo Trace
 - Local file: src/assets/image/Whisky/BuffaloTrace.jpg
@@ -17,24 +42,9 @@ Hibiki Harmony
 - Source: https://commons.wikimedia.org/wiki/File:Hibiki_the_premium_blended_whisky_from_Japanese_distiller_Suntory.jpg
 - License: CC0 1.0
 
-Johnnie Walker Black
-- Local file: src/assets/image/Whisky/JohnnieWalkerBlack.jpg
-- Source: https://commons.wikimedia.org/wiki/File:Black_Label1.JPG
-- License: Public Domain
-
 Ardbeg 10 Years Old
 - Local file: src/assets/image/Whisky/Ardbeg10YearsOld.jpg
 - Source: https://commons.wikimedia.org/wiki/File:Ardbeg_10_years_old_whisky.jpg
-- License: CC BY-SA 3.0
-
-Laphroaig 10 Years Old
-- Local file: src/assets/image/Whisky/Laphroaig10YearsOld.jpg
-- Source: https://commons.wikimedia.org/wiki/File:Laphroaig_10YO.JPG
-- License: CC BY-SA 3.0
-
-Monkey Shoulder
-- Local file: src/assets/image/Whisky/MonkeyShoulder.jpg
-- Source: https://commons.wikimedia.org/wiki/File:Monkey_Shoulder_scotch_bottle.jpg
 - License: CC BY-SA 3.0
 
 Suntory Kakubin
@@ -42,48 +52,12 @@ Suntory Kakubin
 - Source: https://commons.wikimedia.org/wiki/File:Suntory_Kakubin.jpg
 - License: CC BY-SA 3.0
 
-[Existing local image needing source confirmation]
-Black Bottle
-- Local file: src/assets/image/Whisky/BlackBottle.png
-- License status: Source license not yet confirmed
-
-Royal Salute
-- Local file: src/assets/image/Whisky/RoyalSalute.png
-- License status: Source license not yet confirmed
-
-[Verified reusable source found, download pending]
-Jim Beam White
-- Candidate source: https://commons.wikimedia.org/wiki/File:Jim_Beam_White_Label_New.jpg
-- Intended local file: src/assets/image/Whisky/JimBeamWhite.jpg
-- License: CC BY-SA 4.0
-- Status: Reusable source verified on 2026-06-14, but Wikimedia rate limiting blocked download during this run
-
-Jack Daniel's old No.7
-- Candidate source: https://commons.wikimedia.org/wiki/File:Jack_Daniel%27s_Old_No._7_1,14l.jpg
-- Intended local file: src/assets/image/Whisky/JackDanielsOldNo7.jpg
+Laphroaig 10 Years Old
+- Local file: src/assets/image/Whisky/Laphroaig10YearsOld.jpg
+- Source: https://commons.wikimedia.org/wiki/File:Laphroaig_10YO.JPG
 - License: CC BY-SA 3.0
-- Status: Reusable source verified on 2026-06-14, but Wikimedia rate limiting blocked download during this run
-
-Talisker 10 Years Old
-- Candidate source: https://commons.wikimedia.org/wiki/File:Talisker_10_blau_voll.jpg
-- Intended local file: src/assets/image/Whisky/Talisker10YearsOld.jpg
-- License: CC BY-SA 3.0
-- Status: Reusable source verified on 2026-06-14, but Wikimedia rate limiting blocked download during this run
-
-Wild Turkey 101
-- Candidate source: https://commons.wikimedia.org/wiki/File:Wild_Turkey_101.JPG
-- Intended local file: src/assets/image/Whisky/WildTurkey101.jpg
-- License: CC BY-SA 3.0
-- Status: Reusable source verified on 2026-06-14, but Wikimedia rate limiting blocked download during this run
-
-Johnnie Walker Green
-- Candidate source: https://commons.wikimedia.org/wiki/File:Johnnie_Walker_Green_Label_box.jpg
-- Intended local file: src/assets/image/Whisky/JohnnieWalkerGreen.jpg
-- License: CC BY-SA 3.0
-- Status: Reusable source verified on 2026-06-14, but Wikimedia rate limiting blocked download during this run
 
 [Policy]
 - Prefer CC0 or Public Domain when available.
 - CC BY / CC BY-SA images require attribution handling if redistributed.
 - Do not add images from stores, blogs, or search results unless license is explicit.
-- Wikimedia Commons temporarily rate-limited additional downloads on 2026-06-14; candidates above were recorded for follow-up.

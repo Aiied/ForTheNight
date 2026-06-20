@@ -6,6 +6,7 @@ import Ui.component.AbstractSearchListPage;
 import Ui.component.FixedImageLabel;
 import Ui.panel.BackgroundPanel;
 import Ui.panel.WoodFilterPanel;
+import Ui.text.SearchStrings;
 import Ui.theme.ScreenScale;
 import Ui.theme.ThemeColors;
 import Ui.theme.ThemeFonts;
@@ -44,7 +45,13 @@ public class SearchPage extends AbstractSearchListPage<Whisky> {
     private final JComboBox<String> finishBox;
 
     public SearchPage(JFrame previousPage) {
-        super("Search", previousPage, "search", ThemeSizes.SEARCH_FIELD_WIDTH, ThemeSizes.SEARCH_FIELD_HEIGHT);
+        super(
+                SearchStrings.PAGE_TITLE,
+                previousPage,
+                SearchStrings.SEARCH_PLACEHOLDER,
+                ThemeSizes.SEARCH_FIELD_WIDTH,
+                ThemeSizes.SEARCH_FIELD_HEIGHT
+        );
 
         allWhiskies = getCachedWhiskies();
         filter = getCachedFilter(allWhiskies);
@@ -70,7 +77,7 @@ public class SearchPage extends AbstractSearchListPage<Whisky> {
 
     @Override
     protected String getEmptyMessage() {
-        return "No whisky data";
+        return SearchStrings.EMPTY_WHISKY_DATA;
     }
 
     @Override
@@ -100,19 +107,19 @@ public class SearchPage extends AbstractSearchListPage<Whisky> {
         gbc.weightx = 1.0;
         gbc.gridx = 0;
 
-        addFilterRow(filterPanel, gbc, "Country", countryBox);
-        addFilterRow(filterPanel, gbc, "Type", typeBox);
-        addFilterRow(filterPanel, gbc, "Aroma", aromaBox);
-        addFilterRow(filterPanel, gbc, "Taste", tasteBox);
-        addFilterRow(filterPanel, gbc, "Finish", finishBox);
+        addFilterRow(filterPanel, gbc, SearchStrings.FILTER_COUNTRY, countryBox);
+        addFilterRow(filterPanel, gbc, SearchStrings.FILTER_TYPE, typeBox);
+        addFilterRow(filterPanel, gbc, SearchStrings.FILTER_AROMA, aromaBox);
+        addFilterRow(filterPanel, gbc, SearchStrings.FILTER_TASTE, tasteBox);
+        addFilterRow(filterPanel, gbc, SearchStrings.FILTER_FINISH, finishBox);
 
-        JButton searchButton = new AbstractActionButton("Search", ScreenScale.scale(13)) { };
+        JButton searchButton = new AbstractActionButton(SearchStrings.SEARCH_BUTTON, ScreenScale.scale(13)) { };
         WoodFilterPanel.styleActionButton(searchButton);
         searchButton.addActionListener(e -> refreshList());
         gbc.gridy++;
         filterPanel.add(searchButton, gbc);
 
-        JButton recommendButton = new AbstractActionButton("Recommend", ScreenScale.scale(13)) { };
+        JButton recommendButton = new AbstractActionButton(SearchStrings.RECOMMEND_BUTTON, ScreenScale.scale(13)) { };
         WoodFilterPanel.styleActionButton(recommendButton);
         recommendButton.addActionListener(e -> showRecommendations());
         gbc.gridy++;
@@ -216,8 +223,8 @@ public class SearchPage extends AbstractSearchListPage<Whisky> {
         if (recommendations.isEmpty()) {
             JOptionPane.showMessageDialog(
                     this,
-                    "Not enough matching whiskies were found from your favorite whisky data.",
-                    "Recommendation",
+                    SearchStrings.RECOMMENDATION_EMPTY,
+                    SearchStrings.RECOMMENDATION_TITLE,
                     JOptionPane.INFORMATION_MESSAGE
             );
             return;

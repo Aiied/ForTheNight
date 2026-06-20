@@ -5,6 +5,7 @@ import Ui.buttons.AbstractActionButton;
 import Ui.component.FixedImageLabel;
 import Ui.icon.StarIconFactory;
 import Ui.panel.BackgroundPanel;
+import Ui.text.TastingNoteStrings;
 import Ui.theme.ScreenScale;
 import Ui.theme.ThemeColors;
 import Ui.theme.ThemeFonts;
@@ -43,7 +44,7 @@ public class TastingNotePage extends JFrame {
 
     public TastingNotePage(JFrame previousPage) {
         this.previousPage = previousPage;
-        setTitle("TastingNote");
+        setTitle(TastingNoteStrings.PAGE_TITLE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -60,7 +61,7 @@ public class TastingNotePage extends JFrame {
         ));
         topPanel.add(backButton, BorderLayout.WEST);
 
-        JLabel titleLabel = new JLabel("Tasting Notes");
+        JLabel titleLabel = new JLabel(TastingNoteStrings.PAGE_HEADER);
         titleLabel.setForeground(ThemeColors.TEXT_WHITE);
         titleLabel.setFont(ThemeFonts.bold(24));
         titleLabel.setBorder(BorderFactory.createEmptyBorder(
@@ -91,7 +92,7 @@ public class TastingNotePage extends JFrame {
         centerPanel.add(titleLabel);
         centerPanel.add(listScrollPane);
 
-        JButton newNoteButton = new AbstractActionButton("New Note", ScreenScale.scale(16)) { };
+        JButton newNoteButton = new AbstractActionButton(TastingNoteStrings.NEW_NOTE_BUTTON, ScreenScale.scale(16)) { };
         newNoteButton.setPreferredSize(ScreenScale.dimension(
                 ThemeSizes.NOTE_ACTION_BUTTON_WIDTH,
                 ThemeSizes.NOTE_ACTION_BUTTON_HEIGHT
@@ -124,7 +125,7 @@ public class TastingNotePage extends JFrame {
 
         List<TastingNote> notes = new TastingNoteList(AppPaths.TASTING_NOTES_FILE).getTastingNotes();
         if (notes.isEmpty()) {
-            JLabel emptyLabel = new JLabel("No tasting notes yet.");
+            JLabel emptyLabel = new JLabel(TastingNoteStrings.EMPTY_NOTES);
             emptyLabel.setForeground(ThemeColors.TEXT_WHITE);
             emptyLabel.setFont(ThemeFonts.bold(16));
             emptyLabel.setAlignmentX(CENTER_ALIGNMENT);
@@ -182,7 +183,7 @@ public class TastingNotePage extends JFrame {
         textPanel.add(ThemeSpacing.verticalGap(ThemeSpacing.SPACE_4));
         textPanel.add(dateLabel);
         if (note.getImagePath() != null && !note.getImagePath().isBlank()) {
-            JLabel photoLabel = new JLabel("Photo attached");
+            JLabel photoLabel = new JLabel(TastingNoteStrings.PHOTO_ATTACHED);
             photoLabel.setForeground(ThemeColors.TEXT_MUTED);
             photoLabel.setFont(ThemeFonts.plain(12));
             textPanel.add(ThemeSpacing.verticalGap(ThemeSpacing.SPACE_4));

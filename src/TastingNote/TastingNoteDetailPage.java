@@ -5,6 +5,7 @@ import Ui.buttons.AbstractActionButton;
 import Ui.component.FixedImageLabel;
 import Ui.icon.StarIconFactory;
 import Ui.panel.BackgroundPanel;
+import Ui.text.TastingNoteStrings;
 import Ui.theme.ScreenScale;
 import Ui.theme.ThemeColors;
 import Ui.theme.ThemeFonts;
@@ -59,7 +60,7 @@ public class TastingNoteDetailPage extends JFrame {
         topPanel.setMaximumSize(ScreenScale.dimension(Integer.MAX_VALUE, 52));
         topPanel.add(backButton, BorderLayout.WEST);
 
-        JButton editButton = new AbstractActionButton("Edit", ScreenScale.scale(14)) { };
+        JButton editButton = new AbstractActionButton(TastingNoteStrings.EDIT_BUTTON, ScreenScale.scale(14)) { };
         editButton.addActionListener(e -> {
             new NewNotePage(previousPage, note, noteIndex);
             dispose();
@@ -124,10 +125,10 @@ public class TastingNoteDetailPage extends JFrame {
         infoPanel.setAlignmentX(CENTER_ALIGNMENT);
         infoPanel.setMaximumSize(ScreenScale.dimension(760, 460));
 
-        infoPanel.add(createInfoRow("Aroma", joinNotes(note.getAroma())));
-        infoPanel.add(createInfoRow("Taste", joinNotes(note.getTaste())));
-        infoPanel.add(createInfoRow("Finish", joinNotes(note.getFinish())));
-        infoPanel.add(createInfoRow("Review", normalizeText(note.getDetailReview())));
+        infoPanel.add(createInfoRow(TastingNoteStrings.LABEL_AROMA, joinNotes(note.getAroma())));
+        infoPanel.add(createInfoRow(TastingNoteStrings.LABEL_TASTE, joinNotes(note.getTaste())));
+        infoPanel.add(createInfoRow(TastingNoteStrings.LABEL_FINISH, joinNotes(note.getFinish())));
+        infoPanel.add(createInfoRow(TastingNoteStrings.LABEL_REVIEW, normalizeText(note.getDetailReview())));
 
         return infoPanel;
     }
@@ -143,7 +144,7 @@ public class TastingNoteDetailPage extends JFrame {
         titleLabel.setForeground(ThemeColors.TEXT_SECONDARY);
         titleLabel.setFont(ThemeFonts.bold(13));
 
-        JLabel valueLabel = new JLabel(isBlank(value) ? "-" : value);
+        JLabel valueLabel = new JLabel(isBlank(value) ? TastingNoteStrings.EMPTY_VALUE : value);
         valueLabel.setForeground(ThemeColors.TEXT_WHITE);
         valueLabel.setFont(ThemeFonts.plain(14));
 

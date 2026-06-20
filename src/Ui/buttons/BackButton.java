@@ -1,5 +1,6 @@
 package Ui.buttons;
 
+import Ui.text.AppStrings;
 import Ui.theme.ThemeColors;
 import Ui.theme.ThemeFonts;
 import Ui.theme.ThemeSizes;
@@ -21,7 +22,7 @@ public class BackButton extends JButton {
     private boolean hovered;
 
     public BackButton() {
-        super("BACK");
+        super(AppStrings.BACK);
 
         setPreferredSize(ThemeSizes.scaledBackButton());
         setMinimumSize(ThemeSizes.scaledBackButton());

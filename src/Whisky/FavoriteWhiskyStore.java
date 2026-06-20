@@ -38,6 +38,22 @@ public final class FavoriteWhiskyStore {
         return nowFavorite;
     }
 
+    public static synchronized boolean addFavorite(String whiskyName) {
+        String normalizedName = normalizeName(whiskyName);
+        if (normalizedName == null) {
+            return false;
+        }
+
+        LinkedHashSet<String> favorites = loadFavorites();
+        if (favorites.contains(normalizedName)) {
+            return false;
+        }
+
+        favorites.add(normalizedName);
+        saveFavorites(favorites);
+        return true;
+    }
+
     public static synchronized LinkedHashSet<String> getFavorites() {
         return new LinkedHashSet<>(loadFavorites());
     }
@@ -86,5 +102,17 @@ public final class FavoriteWhiskyStore {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static String normalizeName(String whiskyName) {
+        if (whiskyName == null) {
+            return null;
+        }
+
+        String normalizedName = whiskyName.trim();
+        if (normalizedName.isBlank()) {
+            return null;
+        }
+        return normalizedName;
     }
 }

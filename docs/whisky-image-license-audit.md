@@ -20,11 +20,11 @@ Last checked: 2026-06-14
 | Laphroaig 10 Years Old | Downloaded | `src/assets/image/Whisky/Laphroaig10YearsOld.jpg` | Wikimedia Commons: `Laphroaig 10YO.JPG` | CC BY-SA 3.0 | Good bottle photo |
 | Monkey Shoulder | Downloaded | `src/assets/image/Whisky/MonkeyShoulder.jpg` | Wikimedia Commons: `Monkey Shoulder scotch bottle.jpg` | CC BY-SA 3.0 | Standalone bottle photo |
 | Suntory Kakubin | Downloaded | `src/assets/image/Whisky/SuntoryKakubin.jpg` | Wikimedia Commons: `Suntory Kakubin.jpg` | CC BY-SA 3.0 | Straight bottle photo |
-| Jim Beam White | Verified source found | Planned: `src/assets/image/Whisky/JimBeamWhite.jpg` | Wikimedia Commons: `Jim Beam White Label New.jpg` | CC BY-SA 4.0 | Download blocked by Wikimedia rate limiting on 2026-06-14 |
-| Jack Daniel's old No.7 | Verified source found | Planned: `src/assets/image/Whisky/JackDanielsOldNo7.jpg` | Wikimedia Commons: `Jack Daniel's Old No. 7 1,14l.jpg` | CC BY-SA 3.0 | Download blocked by Wikimedia rate limiting on 2026-06-14 |
-| Talisker 10 Years Old | Verified source found | Planned: `src/assets/image/Whisky/Talisker10YearsOld.jpg` | Wikimedia Commons: `Talisker 10 blau voll.jpg` | CC BY-SA 3.0 | Download blocked by Wikimedia rate limiting on 2026-06-14 |
-| Wild Turkey 101 | Verified source found | Planned: `src/assets/image/Whisky/WildTurkey101.jpg` | Wikimedia Commons: `Wild Turkey 101.JPG` | CC BY-SA 3.0 | Download blocked by Wikimedia rate limiting on 2026-06-14 |
-| Johnnie Walker Green | Verified source found | Planned: `src/assets/image/Whisky/JohnnieWalkerGreen.jpg` | Wikimedia Commons: `Johnnie Walker Green Label box.jpg` | CC BY-SA 3.0 | Download blocked by Wikimedia rate limiting on 2026-06-14 |
+| Jim Beam White | Downloaded | `src/assets/image/Whisky/JimBeamWhite.jpg` | Wikimedia Commons: `Jim Beam White Label New.jpg` | CC BY-SA 4.0 | Download completed on 2026-06-15 |
+| Jack Daniel's old No.7 | Downloaded | `src/assets/image/Whisky/JackDanielsOldNo7.jpg` | Wikimedia Commons: `Jack Daniel's Old No. 7 1,14l.jpg` | CC BY-SA 3.0 | Download completed on 2026-06-15 |
+| Talisker 10 Years Old | Downloaded | `src/assets/image/Whisky/Talisker10YearsOld.jpg` | Wikimedia Commons: `Talisker 10 blau voll.jpg` | CC BY-SA 3.0 | Download completed on 2026-06-15 |
+| Wild Turkey 101 | Downloaded | `src/assets/image/Whisky/WildTurkey101.jpg` | Wikimedia Commons: `Wild Turkey 101.JPG` | CC BY-SA 3.0 | Download completed on 2026-06-15 |
+| Johnnie Walker Green | Downloaded | `src/assets/image/Whisky/JohnnieWalkerGreen.jpg` | Wikimedia Commons: `Johnnie Walker Green Label box.jpg` | CC BY-SA 3.0 | Download completed on 2026-06-15 |
 
 ## Existing local image references
 

@@ -4,6 +4,7 @@ import Ui.component.AbstractSearchListPage;
 import Ui.buttons.AbstractActionButton;
 import Ui.component.FixedImageLabel;
 import Ui.panel.BackgroundPanel;
+import Ui.text.FavoriteWhiskyStrings;
 import Ui.theme.ScreenScale;
 import Ui.theme.ThemeColors;
 import Ui.theme.ThemeFonts;
@@ -37,7 +38,13 @@ public class FavoriteWhiskyPage extends AbstractSearchListPage<Whisky> {
     private final List<Whisky> whiskies;
 
     public FavoriteWhiskyPage() {
-        super("Favorite Whisky Setup", null, "search", ThemeSizes.SEARCH_FIELD_WIDTH, ThemeSizes.SEARCH_FIELD_HEIGHT);
+        super(
+                FavoriteWhiskyStrings.PAGE_TITLE,
+                null,
+                FavoriteWhiskyStrings.SEARCH_PLACEHOLDER,
+                ThemeSizes.SEARCH_FIELD_WIDTH,
+                ThemeSizes.SEARCH_FIELD_HEIGHT
+        );
 
         whiskies = setupService.loadWhiskies();
         initializeSearchPage();
@@ -45,7 +52,7 @@ public class FavoriteWhiskyPage extends AbstractSearchListPage<Whisky> {
 
     private void saveFavoritesAndMove() {
         if (!selectionModel.hasMinimumSelection(MINIMUM_FAVORITES)) {
-            JOptionPane.showMessageDialog(this, "Please select at least 2 favorite whiskies.");
+            JOptionPane.showMessageDialog(this, FavoriteWhiskyStrings.MINIMUM_SELECTION_MESSAGE);
             return;
         }
 
@@ -79,7 +86,7 @@ public class FavoriteWhiskyPage extends AbstractSearchListPage<Whisky> {
 
     @Override
     protected String getEmptyMessage() {
-        return "No whisky data";
+        return FavoriteWhiskyStrings.EMPTY_WHISKY_DATA;
     }
 
     @Override
@@ -94,7 +101,7 @@ public class FavoriteWhiskyPage extends AbstractSearchListPage<Whisky> {
 
     @Override
     protected JComponent createTopCenterComponent() {
-        JLabel titleLabel = new JLabel("Select Your Favorite Whiskies");
+        JLabel titleLabel = new JLabel(FavoriteWhiskyStrings.TITLE);
         titleLabel.setForeground(ThemeColors.TEXT_WHITE);
         titleLabel.setFont(ThemeFonts.bold(30));
         titleLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -103,14 +110,14 @@ public class FavoriteWhiskyPage extends AbstractSearchListPage<Whisky> {
 
     @Override
     protected JComponent createSouthPanel() {
-        JButton saveButton = new AbstractActionButton("Save Favorites", ScreenScale.scale(18)) { };
+        JButton saveButton = new AbstractActionButton(FavoriteWhiskyStrings.SAVE_FAVORITES, ScreenScale.scale(18)) { };
         saveButton.setPreferredSize(ScreenScale.dimension(
                 ThemeSizes.PRIMARY_BUTTON_WIDTH,
                 ThemeSizes.PRIMARY_BUTTON_HEIGHT
         ));
         saveButton.addActionListener(e -> saveFavoritesAndMove());
 
-        JButton noTastedButton = new AbstractActionButton("I Have Not Tried Whisky", ScreenScale.scale(16)) { };
+        JButton noTastedButton = new AbstractActionButton(FavoriteWhiskyStrings.NO_TASTED_WHISKY, ScreenScale.scale(16)) { };
         noTastedButton.setPreferredSize(ScreenScale.dimension(
                 ThemeSizes.SECONDARY_BUTTON_WIDTH,
                 ThemeSizes.SECONDARY_BUTTON_HEIGHT

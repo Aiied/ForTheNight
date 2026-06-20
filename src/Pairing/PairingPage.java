@@ -5,6 +5,7 @@ import Ui.buttons.AbstractActionButton;
 import Ui.component.FixedImageLabel;
 import Ui.panel.BackgroundPanel;
 import Ui.panel.WoodFilterPanel;
+import Ui.text.PairingStrings;
 import Ui.theme.ScreenScale;
 import Ui.theme.ThemeColors;
 import Ui.theme.ThemeFonts;
@@ -33,7 +34,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class PairingPage extends AbstractSearchListPage<Food> {
-    private static final String ALL_RECIPES_OPTION = "All Cocktails";
     private final JFrame previousPage;
     private final ArrayList<Food> allFoods;
     private final JComboBox<String> recipeBox;
@@ -43,7 +43,13 @@ public class PairingPage extends AbstractSearchListPage<Food> {
     }
 
     public PairingPage(JFrame previousPage) {
-        super("Pairing", previousPage, "search", ThemeSizes.SEARCH_FIELD_WIDTH, ThemeSizes.SEARCH_FIELD_HEIGHT);
+        super(
+                PairingStrings.PAGE_TITLE,
+                previousPage,
+                PairingStrings.SEARCH_PLACEHOLDER,
+                ThemeSizes.SEARCH_FIELD_WIDTH,
+                ThemeSizes.SEARCH_FIELD_HEIGHT
+        );
         this.previousPage = previousPage;
 
         FoodList foodList = new FoodList(AppPaths.PAIRING_FILE);
@@ -61,7 +67,7 @@ public class PairingPage extends AbstractSearchListPage<Food> {
 
     @Override
     protected String getEmptyMessage() {
-        return "No pairing data";
+        return PairingStrings.EMPTY_PAIRING_DATA;
     }
 
     @Override
@@ -95,7 +101,7 @@ public class PairingPage extends AbstractSearchListPage<Food> {
 
     private List<String> buildRecipeOptions() {
         ArrayList<String> options = new ArrayList<>();
-        options.add(ALL_RECIPES_OPTION);
+        options.add(PairingStrings.ALL_RECIPES_OPTION);
         for (Food food : allFoods) {
             if (!food.getRecipe().isBlank() && !options.contains(food.getRecipe())) {
                 options.add(food.getRecipe());
@@ -114,7 +120,7 @@ public class PairingPage extends AbstractSearchListPage<Food> {
                     || food.getName().toLowerCase().contains(keyword)
                     || food.getWhiskyName().toLowerCase().contains(keyword);
             boolean matchesRecipe = selectedRecipe == null
-                    || ALL_RECIPES_OPTION.equals(selectedRecipe)
+                    || PairingStrings.ALL_RECIPES_OPTION.equals(selectedRecipe)
                     || food.getRecipe().equals(selectedRecipe);
 
             if (matchesKeyword && matchesRecipe) {
@@ -226,13 +232,14 @@ public class PairingPage extends AbstractSearchListPage<Food> {
 
     private String buildRecipePopupText(Food food) {
         ArrayList<String> lines = new ArrayList<>();
-        lines.add("Recommended Pairing: " + food.getName());
+        lines.add(PairingStrings.RECOMMENDED_PAIRING + ": " + food.getName());
         lines.add("");
-        lines.add("Whisky: " + food.getWhiskyName());
-        appendIfPresent(lines, "Liqueur", food.getLiqueur());
-        appendIfPresent(lines, "Mixer", food.getDrink());
-        appendIfPresent(lines, "Garnish", food.getGarnish());
-        appendIfPresent(lines, "Additional Ingredients", food.getExtraIngredient());
+        lines.add(PairingStrings.WHISKY + ": " + food.getWhiskyName());
+        lines.add(PairingStrings.WHISKY_AMOUNT + ": " + PairingStrings.DEFAULT_WHISKY_AMOUNT);
+        appendIfPresent(lines, PairingStrings.LIQUEUR, food.getLiqueur());
+        appendIfPresent(lines, PairingStrings.MIXER, food.getDrink());
+        appendIfPresent(lines, PairingStrings.GARNISH, food.getGarnish());
+        appendIfPresent(lines, PairingStrings.ADDITIONAL_INGREDIENTS, food.getExtraIngredient());
         return String.join("\n", lines);
     }
 
